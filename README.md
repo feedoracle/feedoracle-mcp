@@ -2,77 +2,74 @@
 
 Enterprise-grade evidence infrastructure for regulated tokenized markets. Provides cryptographically verified compliance and risk intelligence via the Model Context Protocol (MCP).
 
+🔗 **Landing Page:** [feedoracle.io/mcp](https://feedoracle.io/mcp)
+
 ## Quick Start
 
 ```bash
-# Streamable HTTP (recommended)
+# Claude Code (one command)
 claude mcp add --transport http feedoracle https://feedoracle.io/mcp/
 
-# SSE (legacy)
-claude mcp add --transport sse feedoracle https://feedoracle.io/mcp/sse
+# Claude Desktop — add to claude_desktop_config.json
+{
+  "mcpServers": {
+    "feedoracle": {
+      "url": "https://feedoracle.io/mcp/"
+    }
+  }
+}
 ```
 
-Free tier: 100 calls/day, no API key required.
+Free tier: 20 calls/day anonymous, 50/day with API key. No auth required to start.
 
 ## Tools
 
-| Tool | Description | Read/Write |
-|------|-------------|------------|
-| `compliance_preflight` | Pre-flight regulatory check → PASS/WARN/BLOCK | Read |
-| `mica_status` | MiCA EU authorization status (ESMA/EBA cross-ref) | Read |
-| `evidence_profile` | Multi-dimensional evidence scoring across 9 dimensions | Read |
-| `custody_risk` | Custody & counterparty risk, SIFI, concentration (DORA Art.28) | Read |
-| `market_liquidity` | DEX liquidity depth & exit channels (MiCA Art.45) | Read |
-| `evidence_leaderboard` | 61 RWA protocols ranked by evidence grade A-F | Read |
-| `rlusd_integrity` | RLUSD real-time integrity & attestation | Read |
-| `macro_risk` | US macro risk composite from 86 FRED series | Read |
-| `generate_report` | Signed, XRPL-anchored PDF compliance report | Write |
+| Tool | Description | Type |
+|------|-------------|------|
+| `compliance_preflight` | PASS/WARN/BLOCK verdict for any token | read |
+| `mica_status` | MiCA EU authorization check | read |
+| `evidence_profile` | 9-dimension risk scoring (A-F) | read |
+| `custody_risk` | SIFI status, concentration analysis | read |
+| `market_liquidity` | DEX depth & exit channels | read |
+| `evidence_leaderboard` | Top 61 RWA protocols ranked | read |
+| `rlusd_integrity` | RLUSD real-time attestation | read |
+| `macro_risk` | 86 FRED series risk dashboard | read |
+| `generate_report` | Signed PDF, blockchain-anchored | write |
 
-## Coverage
+## Examples
 
-- **61 RWA protocols** with 9-dimension risk assessment
-- **40+ stablecoins** with MiCA compliance flags
-- **118 FRED economic series** for macro risk
-- **50+ blockchain carbon footprints** for ESG
+See [`examples/`](./examples/) for ready-to-use configs and code:
 
-## Authentication
+- **[claude_desktop_config.json](./examples/claude_desktop_config.json)** — Drop into Claude Desktop
+- **[cursor_mcp.json](./examples/cursor_mcp.json)** — Cursor / Windsurf config
+- **[python_client.py](./examples/python_client.py)** — Python SDK client
+- **[health_check.sh](./examples/health_check.sh)** — Quick server test
+- **[sample_prompts.md](./examples/sample_prompts.md)** — Copy-paste prompts
 
-| Tier | Daily Calls | API Key | Reports |
-|------|-------------|---------|---------|
-| Free | 100 | Not required | ❌ |
-| Pro ($299/mo) | 25,000 | Required | ✅ |
-| Enterprise | Unlimited | Required | ✅ |
+## Transports
 
-## Safety Annotations
+| Transport | URL | Protocol |
+|-----------|-----|----------|
+| Streamable HTTP | `https://feedoracle.io/mcp/` | HTTP POST |
+| SSE (legacy) | `https://feedoracle.io/mcp/sse` | Server-Sent Events |
 
-All tools include MCP safety annotations:
-- 8 tools: `readOnlyHint: true` — read-only data queries
-- 1 tool: `destructiveHint: true` — `generate_report` creates new documents
+## Pricing
 
-## Transport
-
-- **Streamable HTTP** (primary): `https://feedoracle.io/mcp/`
-- **SSE** (legacy): `https://feedoracle.io/mcp/sse`
-- **Health**: `https://feedoracle.io/mcp/health`
-
-## Discovery
-
-- Server metadata: `https://feedoracle.io/.well-known/mcp/server.json`
-- OpenAPI spec: `https://feedoracle.io/.well-known/openapi.json`
-- AI plugin: `https://feedoracle.io/.well-known/ai-plugin.json`
-
-## Skill
-
-This repository includes a Claude Skill (`SKILL.md`) that teaches Claude when and how to use FeedOracle for compliance queries. The skill triggers on mentions of MiCA, DORA, stablecoin compliance, RWA risk, custody risk, and related regulatory topics.
+| Tier | Calls/day | Reports | Price |
+|------|-----------|---------|-------|
+| Anonymous | 20 | — | Free |
+| Free (key) | 50 | — | Free |
+| Pro | 500 | ✓ | $299/mo |
+| Enterprise | Unlimited | ✓ | [Contact](mailto:enterprise@feedoracle.io) |
 
 ## Links
 
-- **Website**: [feedoracle.io](https://feedoracle.io)
-- **Documentation**: [feedoracle.io/docs](https://feedoracle.io/docs/)
-- **Examples**: [feedoracle.io/docs/mcp-examples.html](https://feedoracle.io/docs/mcp-examples.html)
-- **Privacy**: [feedoracle.io/privacy](https://feedoracle.io/privacy)
-- **Terms**: [feedoracle.io/terms](https://feedoracle.io/terms)
+- 🌐 [feedoracle.io](https://feedoracle.io)
+- 📖 [API Documentation](https://feedoracle.io/docs)
+- 💡 [Usage Examples](https://feedoracle.io/docs/mcp-examples.html)
+- 🏥 [Health Check](https://feedoracle.io/mcp/health)
+- 📋 [Privacy Policy](https://feedoracle.io/privacy)
 
 ## License
 
-Proprietary. © 2026 FeedOracle. All rights reserved.
+Proprietary — © 2026 FeedOracle. API usage subject to [Terms of Service](https://feedoracle.io/terms).
