@@ -1,0 +1,27 @@
+{
+  "name": "FeedOracle",
+  "description": "Compliance intelligence for regulated tokenized markets. MiCA, DORA, RWA risk, macro economics.",
+  "icon": "https://feedoracle.io/img/favicon-new.svg",
+  "category": "Financial Services",
+  "mcp_servers": [
+    {
+      "name": "feedoracle",
+      "description": "Cryptographically verified compliance and risk data — 9 tools for MiCA status, evidence grades, custody risk, macro risk, and audit-ready reports.",
+      "transport": "http",
+      "url": "https://feedoracle.io/mcp/"
+    }
+  ],
+  "skills": [
+    {
+      "name": "FeedOracle Compliance Intelligence",
+      "path": "SKILL.md"
+    }
+  ],
+  "homepage": "https://feedoracle.io",
+  "repository": "https://github.com/feedoracle/feedoracle-mcp",
+  "license": "Proprietary",
+  "author": {
+    "name": "FeedOracle",
+    "email": "enterprise@feedoracle.io"
+  }
+}
