@@ -1,27 +1,16 @@
 {
-  "name": "FeedOracle",
-  "description": "Compliance intelligence for regulated tokenized markets. MiCA, DORA, RWA risk, macro economics.",
-  "icon": "https://feedoracle.io/img/favicon-new.svg",
-  "category": "Financial Services",
-  "mcp_servers": [
-    {
-      "name": "feedoracle",
-      "description": "Cryptographically verified compliance and risk data — 9 tools for MiCA status, evidence grades, custody risk, macro risk, and audit-ready reports.",
-      "transport": "http",
-      "url": "https://feedoracle.io/mcp/"
-    }
-  ],
-  "skills": [
-    {
-      "name": "FeedOracle Compliance Intelligence",
-      "path": "SKILL.md"
-    }
-  ],
+  "schema_version": "1.0",
+  "name": "FeedOracle Compliance",
+  "description": "Real-time MiCA regulatory compliance and RWA risk intelligence. 18 tools covering 19 MiCA articles across 80+ stablecoins. Cryptographically signed responses.",
+  "version": "2.3.1",
+  "author": "FeedOracle",
   "homepage": "https://feedoracle.io",
-  "repository": "https://github.com/feedoracle/feedoracle-mcp",
-  "license": "Proprietary",
-  "author": {
-    "name": "FeedOracle",
-    "email": "enterprise@feedoracle.io"
-  }
+  "icon": "https://feedoracle.io/favicon.png",
+  "transport": "streamable-http",
+  "url": "https://feedoracle.io/mcp/",
+  "categories": ["compliance", "finance", "regulatory", "blockchain"],
+  "tags": ["MiCA", "stablecoin", "RWA", "compliance", "EU", "DORA", "CSRD"],
+  "requires_auth": false,
+  "free_tier": true,
+  "tool_count": 18
 }

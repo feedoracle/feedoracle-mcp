@@ -1,114 +1,63 @@
----
-name: feedoracle-compliance
-description: >
-  Use this skill whenever the user asks about regulatory compliance for crypto assets,
-  stablecoin MiCA status, RWA risk assessment, custody risk, DORA operational resilience,
-  or macro-economic risk factors affecting tokenized markets. Triggers include mentions of
-  MiCA, DORA, CSRD, stablecoin compliance, RWA risk, evidence grade, custody risk,
-  counterparty risk, SIFI status, ESMA, EBA, or regulatory pre-flight checks.
-  Also triggers when users ask about trading restrictions in the EU, stablecoin
-  authorization status, or need audit-ready compliance evidence.
----
+# FeedOracle MCP — Skill v2.3.1
 
-# FeedOracle Compliance Intelligence
+## What this server does
 
-## When to Use
+FeedOracle provides real-time MiCA regulatory compliance and RWA risk intelligence for AI agents. It monitors **18 MiCA articles** across 80+ stablecoins and RWA protocols. Every response uses an identical JSON schema with status taxonomy, evidence classes, HMAC signature, and verify URL.
 
-Activate this skill when the user's query involves ANY of the following:
+## When to use this server
 
-**Regulatory Compliance**
-- MiCA (Markets in Crypto-Assets) status or compliance checks
-- DORA (Digital Operational Resilience Act) assessments
-- CSRD (Corporate Sustainability Reporting Directive) data
-- EU regulatory requirements for crypto assets or stablecoins
-- Whether a token can be traded/listed in the EU
-- Stablecoin authorization or licensing status
+Use FeedOracle when the user asks about:
+- MiCA compliance status of any stablecoin or token (EURC, USDT, USDC, EURe, RLUSD, etc.)
+- Peg stability, depeg events, or Art. 35 monitoring
+- Significant issuer thresholds (Art. 45/58) and EBA oversight
+- Interest prohibition compliance (Art. 23/52)
+- Reserve quality and Art. 53 eligibility
+- Recovery/redemption plans and audit freshness (Art. 29/30/55)
+- RWA custody risk, evidence grades, or leaderboard rankings
+- EU macro risk or RLUSD integrity
+- Generating signed compliance PDFs (MiCA, DORA, CSRD)
 
-**Risk Assessment**
-- RWA (Real World Asset) protocol risk scoring
-- Evidence quality grades (A-F) for protocols
-- Custody and counterparty risk analysis
-- SIFI (Systemically Important Financial Institution) status
-- Single point of failure analysis
-- Liquidity depth or exit channel analysis
+## Tool selection guide
 
-**Macro Economics**
-- US recession probability or macro risk indicators
-- Impact of macro conditions on crypto markets
-- FRED economic data (inflation, rates, employment)
-- Financial stress indicators
+**Start here for token-level questions:**
+1. `mica_status` — authorization check (fast, LIGHT)
+2. `peg_deviation` — peg stability now (fast, LIGHT)
+3. `mica_full_pack` — all 12 MiCA articles at once (needs API key, HEAVY)
 
-**Compliance Workflows**
-- Pre-flight checks before trades or swaps
-- Audit-ready evidence generation
-- Compliance report generation (MiCA, DORA, RWA)
-- Portfolio screening for regulatory exposure
+**For specific articles:**
+- Art. 35 → `peg_deviation`, `peg_history`
+- Art. 45/58 → `significant_issuer`
+- Art. 23/52 → `interest_check`
+- Art. 29/30/55 → `document_compliance`
+- Art. 24/25/53 → `reserve_quality`
+- Art. 26/27 → `custody_risk`
 
-## Available Tools
+**For transaction decisions:**
+- `compliance_preflight` → returns PASS/WARN/BLOCK (not COMPLIANT/NOT_AUTHORIZED)
 
-| Tool | Purpose | Auth Required |
-|------|---------|---------------|
-| `compliance_preflight` | PASS/WARN/BLOCK verdict with reason codes | No |
-| `mica_status` | MiCA EU authorization status (ESMA/EBA cross-ref) | No |
-| `evidence_profile` | Multi-dimensional evidence scoring (9 dimensions) | No |
-| `custody_risk` | Custody & counterparty risk, SIFI, concentration | No |
-| `market_liquidity` | DEX liquidity depth & exit channels | No |
-| `evidence_leaderboard` | Top protocols ranked by evidence grade A-F | No |
-| `rlusd_integrity` | RLUSD real-time integrity & attestation | No |
-| `macro_risk` | US macro risk composite from 86 FRED series | No |
-| `generate_report` | Signed PDF compliance report (XRPL-anchored) | API Key |
+**For market-wide views:**
+- `mica_market_overview` → all alerts at once (needs API key)
+- `evidence_leaderboard` → top protocols ranked
 
-## How to Use
+## Status values
 
-### Compliance Pre-Flight (most common)
-When a user asks whether a token is safe/compliant to trade:
-```
-Use compliance_preflight with {"token_symbol": "USDC", "jurisdiction": "EU"}
-```
-Returns PASS, WARN, or BLOCK with specific reason codes and confidence score.
+| Field | Values |
+|-------|--------|
+| `status` (all MiCA tools) | COMPLIANT · PENDING · NOT_AUTHORIZED · UNKNOWN · SIGNIFICANT |
+| `decision` (preflight only) | PASS · WARN · BLOCK |
 
-### MiCA Status Check
-When a user asks about EU stablecoin authorization:
-```
-Use mica_status with {"token_symbol": "USDT"}
-```
-Returns authorization status cross-referenced with ESMA/EBA registers.
+## Response fields always present
 
-### Risk Assessment
-When a user asks about a protocol's risk profile:
-```
-Use evidence_profile with {"protocol": "ondo-usdy"}
-Use custody_risk with {"protocol": "ondo-usdy"}
-```
-Combine both for a comprehensive view — evidence quality + custody risk.
+`schema_version` · `tool` · `request_id` · `jurisdiction` · `status/decision` · `reason_codes[]` · `mica_articles[]` · `confidence` · `sources[].evidence_class` · `meta.cost_class` · `meta.requires_key` · `signature` · `verify_url`
 
-### Portfolio Screening
-When a user wants to compare multiple protocols:
-```
-Use evidence_leaderboard with {"top_n": 15}
-```
-Returns ranked list of 61 RWA protocols by evidence grade.
-
-### Macro Context
-When a user asks about market conditions or recession risk:
-```
-Use macro_risk (no parameters needed)
-```
-Returns composite risk level from 86 FRED economic series.
-
-## Response Guidelines
-
-1. **Always cite the source**: Mention that data comes from FeedOracle's verified evidence infrastructure
-2. **Include the verdict clearly**: Lead with PASS/WARN/BLOCK for compliance checks
-3. **Note the confidence score**: Higher confidence = more data sources confirmed
-4. **Add the disclaimer**: Compliance data is informational — not legal advice
-5. **Mention cryptographic verification**: Responses are ECDSA-signed and blockchain-anchored
-6. **Suggest next steps**: If WARN, suggest which specific checks need attention
-
-## Connection
+## Example calls
 
 ```
-claude mcp add --transport http feedoracle https://feedoracle.io/mcp/
+"Is EURC MiCA compliant?" → mica_status(EURC)
+"Check USDT peg right now" → peg_deviation(USDT)
+"Is USDC a significant issuer?" → significant_issuer(USDC)
+"Full MiCA check for RLUSD" → mica_full_pack(RLUSD) [needs key]
+"Any peg alerts in the market?" → mica_market_overview() [needs key]
+"Top 10 RWA protocols" → evidence_leaderboard(top_n=10)
+"Generate MiCA report" → generate_report(report_type=mica) [needs key]
 ```
-
-Free tier: 100 calls/day, no API key needed.
