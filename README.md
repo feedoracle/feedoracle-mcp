@@ -1,6 +1,6 @@
 # FeedOracle MCP Server v2.3.1
 
-Enterprise MiCA compliance and RWA risk intelligence for AI agents. Real-time monitoring of **18 MiCA articles** across 80+ stablecoins and RWA protocols — cryptographically signed, machine-readable, enterprise-ready.
+Enterprise MiCA compliance and RWA risk intelligence for AI agents. Real-time monitoring of **18 MiCA articles** across 105+ stablecoins and RWA protocols — cryptographically signed, machine-readable, enterprise-ready.
 
 🔗 **Landing Page:** [feedoracle.io/mcp](https://feedoracle.io/mcp)  
 📋 **Discovery:** [feedoracle.io/mcp/.well-known/mcp/server.json](https://feedoracle.io/mcp/.well-known/mcp/server.json)  
@@ -52,7 +52,7 @@ Free tier: 20 calls/day — no API key required to start.
 | `interest_check` | 23, 52 | Interest prohibition scan. Scans 18,000+ DeFi pools for issuer yield |
 | `evidence_profile` | 36, 37, 45 | 9-dimension evidence grade A–F (governance, custody, reserves…) |
 | `market_liquidity` | 45, 51 | DEX liquidity depth and redemption exit channels |
-| `evidence_leaderboard` | 36, 37, 45 | Top 80+ RWA protocols ranked by evidence grade |
+| `evidence_leaderboard` | 36, 37, 45 | Top 61 RWA protocols & 105+ stablecoins ranked by evidence grade |
 | `macro_risk` | — | US macro composite from 86 FRED series (recession, inflation, Fed) |
 
 ### 🔴 HEAVY — API key required
