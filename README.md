@@ -24,7 +24,7 @@ claude mcp add --transport http feedoracle https://feedoracle.io/mcp/
 }
 ```
 
-Free tier: 20 calls/day — no API key required to start.
+Free tier: 100 calls/day — no API key required to start.
 
 ---
 
