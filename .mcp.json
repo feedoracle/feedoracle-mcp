@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "feedoracle": {
+      "type": "streamable-http",
+      "url": "https://feedoracle.io/mcp/",
+      "description": "FeedOracle MiCA Compliance & RWA Risk Intelligence"
+    }
+  }
+}

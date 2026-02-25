@@ -1,0 +1,31 @@
+{
+  "name": "feedoracle-compliance",
+  "version": "2.3.1",
+  "description": "Real-time MiCA regulatory compliance and RWA risk intelligence for AI agents. 18 tools covering 19 MiCA articles across 105+ stablecoins. Cryptographically signed, audit-ready responses.",
+  "author": {
+    "name": "FeedOracle",
+    "email": "m.keskin@live.de",
+    "url": "https://feedoracle.io"
+  },
+  "homepage": "https://feedoracle.io/mcp",
+  "repository": "https://github.com/feedoracle/feedoracle-mcp",
+  "license": "MIT",
+  "keywords": ["MiCA", "compliance", "stablecoin", "RWA", "regulatory", "EU", "DORA", "CSRD", "blockchain", "evidence"],
+  "categories": ["compliance", "finance", "blockchain"],
+  "components": {
+    "mcp_servers": [
+      {
+        "name": "feedoracle",
+        "description": "MiCA compliance & RWA risk intelligence — 18 tools, cryptographically signed",
+        "config_path": "../.mcp.json"
+      }
+    ],
+    "skills": [
+      {
+        "name": "feedoracle-usage",
+        "description": "How to use FeedOracle MiCA compliance tools effectively",
+        "path": "../skills/feedoracle.md"
+      }
+    ]
+  }
+}
