@@ -61,7 +61,7 @@ Free tier: 100 calls/day — no API key required to start.
 |------|--------------|-------------|
 | `mica_full_pack` | 22–58 (12 articles) | Complete MiCA evidence for one token in one call. `articles_covered` + `overall_mica_compliant` |
 | `mica_market_overview` | All | Market-wide: peg alerts, significant issuers, interest violations, audit status |
-| `generate_report` | All | Signed PDF (MiCA, DORA, RWA Risk, CSRD), XRPL-anchored |
+| `generate_report` | All | Signed PDF (MiCA, DORA, RWA Risk, Macro Risk, CSRD), XRPL-anchored |
 
 ---
 
