@@ -1,12 +1,12 @@
 # FeedOracle MCP Server v2.3.1
 
-Enterprise MiCA compliance and RWA risk intelligence for AI agents. Real-time monitoring of **18 MiCA articles** across 105+ stablecoins and RWA protocols — cryptographically signed, machine-readable, enterprise-ready.
+Enterprise MiCA compliance, RWA risk intelligence, and AI Evidence Layer for AI agents.
 
-🔗 **Landing Page:** [feedoracle.io/mcp](https://feedoracle.io/mcp)  
-📋 **Discovery:** [feedoracle.io/mcp/.well-known/mcp/server.json](https://feedoracle.io/mcp/.well-known/mcp/server.json)  
-📖 **Docs:** [feedoracle.io/docs](https://feedoracle.io/docs)
+Real-time monitoring of 18 MiCA articles across 105+ stablecoins and RWA protocols — cryptographically signed, machine-readable, enterprise-ready. Now with AI Gateway: natural language → signed evidence bundle in one call.
 
----
+🔗 **Landing Page:** feedoracle.io/mcp  
+📋 **Discovery:** feedoracle.io/mcp/.well-known/mcp/server.json  
+📖 **Docs:** feedoracle.io/docs
 
 ## Quick Start
 
@@ -28,7 +28,16 @@ Free tier: 100 calls/day — no API key required to start.
 
 ---
 
-## Tools (18)
+## Tools (22)
+
+### 🤖 AI Evidence Layer — 4 tools *(New)*
+
+| Tool | Description |
+|------|-------------|
+| `ai_query` | Natural language → signed evidence bundle. Ask "Is USDC MiCA-compliant?" and receive a structured, cryptographically signed response |
+| `evidence_bundle` | Aggregated evidence pack for a token: MiCA status, peg, reserves, custody, macro context — one call replaces 23 API calls |
+| `ai_explain` | Grade explanation engine. "Why does EURC score B? What would make it Grade A?" |
+| `ai_provenance` | Full data lineage graph — from FRED series IDs and ESMA register entries to chain hash. 17 nodes, 17 individual hashes |
 
 ### 🟢 LIGHT — No key, instant
 
@@ -59,9 +68,34 @@ Free tier: 100 calls/day — no API key required to start.
 
 | Tool | MiCA Articles | Description |
 |------|--------------|-------------|
-| `mica_full_pack` | 22–58 (12 articles) | Complete MiCA evidence for one token in one call. `articles_covered` + `overall_mica_compliant` |
+| `mica_full_pack` | 22–58 (12 articles) | Complete MiCA evidence for one token in one call |
 | `mica_market_overview` | All | Market-wide: peg alerts, significant issuers, interest violations, audit status |
-| `generate_report` | All | Signed PDF (MiCA, DORA, RWA Risk, Macro Risk, CSRD), XRPL-anchored |
+| `generate_report` | All | Signed PDF (MiCA, DORA, RWA Risk, Macro Risk), XRPL-anchored |
+
+---
+
+## AI Gateway Example
+
+```json
+{
+  "tool": "ai_query",
+  "input": { "query": "Is EURC MiCA-compliant and what is its reserve quality?" }
+}
+
+// Response: signed evidence bundle
+{
+  "intent": "mica_compliance",
+  "asset": "EURC",
+  "mica_compliant": true,
+  "grade": "A",
+  "score": 81.7,
+  "evidence": {
+    "pack_id": "FO-AIG-99F42D062F67",
+    "content_hash": "sha256:42738bace3...",
+    "verifiable": true
+  }
+}
+```
 
 ---
 
@@ -76,71 +110,23 @@ Every tool returns the same envelope:
   "tool": "peg_deviation",
   "request_id": "fo-abc123",
   "timestamp": "2026-02-21T18:00:00Z",
-  "jurisdiction": "EU",
   "status": "COMPLIANT",
   "reason_codes": ["MICA_COMPLIANT"],
   "mica_articles": ["35"],
   "confidence": 0.9,
-  "asset": {
-    "input_symbol": "EURC",
-    "resolved_slug": "eurc",
-    "confidence": 1.0
-  },
-  "evidence": { ... },
-  "sources": [
-    {
-      "registry": "Peg Monitor",
-      "evidence_class": "MARKET_DATA",
-      "fetched_at": "2026-02-21T18:00:00Z"
-    }
-  ],
-  "meta": {
-    "cost_class": "LIGHT",
-    "requires_key": false,
-    "data_freshness": "LIVE",
-    "jurisdiction_scope": "EU",
-    "disclaimer": "Based on available evidence. Not legal advice."
-  },
+  "evidence": { "..." },
   "signature": { "alg": "HMAC-SHA256", "payload_hash": "..." },
   "verify_url": "https://feedoracle.io/verify"
 }
 ```
 
-### Status Taxonomy
-
-| Context | Values |
-|---------|--------|
-| **MiCA regulatory tools** | `COMPLIANT` · `PENDING` · `NOT_AUTHORIZED` · `UNKNOWN` · `SIGNIFICANT` |
-| **compliance_preflight only** | `PASS` · `WARN` · `BLOCK` |
-
-### Evidence Classes
-
-`REGISTER` · `NCA_NOTICE` · `ISSUER_DISCLOSURE` · `ATTESTATION` · `MARKET_DATA` · `ONCHAIN_INFERENCE`
-
 ---
 
 ## MiCA Coverage
 
-**19 articles covered** across 18 tools:
+19 articles covered across 18 regulatory tools (Art. 16/48, 22, 23/52, 24/25, 26/27, 28, 29/30, 35, 36, 37/55, 45/58, 51, 53, 66).
 
-```
-Art. 16/48 — Authorization (ESMA register)
-Art. 22    — Issuer revenue threshold
-Art. 23/52 — Interest prohibition (18,000+ DeFi pools scanned)
-Art. 24/25 — Reserve management policy
-Art. 26/27 — Custody & segregation
-Art. 28    — Own funds requirements
-Art. 29/30 — Recovery & redemption plans
-Art. 35    — Peg stability (live FX-corrected)
-Art. 36    — Reserve stress test proxy
-Art. 37/55 — Independent audit freshness
-Art. 45/58 — Significant issuer thresholds (€5B)
-Art. 51    — Redemption at par
-Art. 53    — Reserve asset quality (Art.53 eligibility %)
-Art. 66    — Sustainability disclosures (50+ chains)
-```
-
-**Not covered** (process/legal, not data-trackable): Art. 6, 9, 18, 21
+Not covered (process/legal, not data-trackable): Art. 6, 9, 18, 21
 
 ---
 
@@ -148,9 +134,9 @@ Art. 66    — Sustainability disclosures (50+ chains)
 
 | Transport | URL |
 |-----------|-----|
-| Streamable HTTP | `https://feedoracle.io/mcp/` |
-| SSE (legacy) | `https://feedoracle.io/mcp/sse` |
-| Discovery | `https://feedoracle.io/mcp/.well-known/mcp/server.json` |
+| Streamable HTTP | https://feedoracle.io/mcp/ |
+| SSE (legacy) | https://feedoracle.io/mcp/sse |
+| Discovery | https://feedoracle.io/mcp/.well-known/mcp/server.json |
 
 ---
 
@@ -159,32 +145,26 @@ Art. 66    — Sustainability disclosures (50+ chains)
 | Tier | Calls/day | HEAVY Tools | Reports | Price |
 |------|-----------|-------------|---------|-------|
 | Anonymous | 20 | — | — | Free |
-| Free (key) | 50 | — | — | Free |
+| Free (key) | 100 | — | — | Free |
 | Pro | 500 | ✓ | ✓ | $299/mo |
-| Enterprise | Unlimited | ✓ | ✓ | [Contact](mailto:enterprise@feedoracle.io) |
+| Enterprise | Unlimited | ✓ | ✓ | Contact |
 
 ---
 
-## Examples
+## The FeedOracle MCP Ecosystem
 
-See [`examples/`](./examples/) for ready-to-use configs:
+| Server | URL | Purpose |
+|--------|-----|---------|
+| **Compliance Oracle** (this) | `https://feedoracle.io/mcp/` | MiCA/DORA regulatory data + AI Evidence Layer |
+| **Macro Oracle** | `https://feedoracle.io/mcp/macro/` | Fed/ECB economic indicators, 86 FRED series |
+| **Stablecoin Risk** | `https://feedoracle.io/mcp/risk/` | 7-signal stablecoin operational risk (SAFE/CAUTION/AVOID) |
 
-- **[claude_desktop_config.json](./examples/claude_desktop_config.json)** — Claude Desktop
-- **[cursor_mcp.json](./examples/cursor_mcp.json)** — Cursor / Windsurf
-- **[python_client.py](./examples/python_client.py)** — Python SDK client
-- **[health_check.sh](./examples/health_check.sh)** — Quick server test
-- **[sample_prompts.md](./examples/sample_prompts.md)** — Copy-paste prompts
+> "May your agent trade this?" → Compliance Oracle  
+> "Should your agent trade right now?" → Macro Oracle  
+> "Is this stablecoin safe for settlement?" → Stablecoin Risk
 
 ---
 
-## Links
+🌐 [feedoracle.io](https://feedoracle.io) · 📖 [Docs](https://feedoracle.io/docs.html) · 🏥 [Health](https://feedoracle.io/mcp/health)
 
-- 🌐 [feedoracle.io](https://feedoracle.io)
-- 🏥 [Health Check](https://feedoracle.io/mcp/health)
-- 📋 [server.json](https://feedoracle.io/mcp/.well-known/mcp/server.json)
-- 📖 [Docs](https://feedoracle.io/docs)
-- 📄 [Terms](https://feedoracle.io/terms)
-
-## License
-
-Proprietary — © 2026 FeedOracle. API usage subject to [Terms of Service](https://feedoracle.io/terms).
+**License:** Proprietary — © 2026 FeedOracle.
