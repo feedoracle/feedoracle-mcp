@@ -1,10 +1,10 @@
-# FeedOracle MCP Server v3.0
+# FeedOracle MCP Server v3.1
 
 **Enterprise MiCA compliance, RWA risk intelligence, AI Evidence Layer, and Enterprise Trust Layer for AI agents.**
 
 Real-time monitoring of 18 MiCA articles across 105+ stablecoins and RWA protocols — cryptographically signed (JWS RFC 7515), machine-readable, enterprise-ready. Every response includes SLA quality signals, trust metadata, and is logged in an append-only Evidence Registry.
 
-> **New in v3.0:** Enterprise Trust Layer — JWS signing, versioned schemas, evidence registry, SLA layer, agent trust management, streaming evidence (SSE), deterministic replay, and zero-trust validation SDK.
+> **New in v3.1:** Enterprise Trust Layer — JWS signing, versioned schemas, evidence registry, SLA layer, agent trust management, streaming evidence (SSE), deterministic replay, and zero-trust validation SDK.
 
 🔗 **Landing Page:** [feedoracle.io/mcp](https://feedoracle.io/mcp)
 📋 **Discovery:** [feedoracle.io/mcp/.well-known/mcp/server.json](https://feedoracle.io/mcp/.well-known/mcp/server.json)
@@ -28,6 +28,75 @@ claude mcp add --transport http feedoracle https://feedoracle.io/mcp/
 ```
 
 Free tier: 100 calls/day — no API key required to start.
+
+---
+
+## Agent M2M Auth (no browser, no human)
+
+Agents register and authenticate autonomously using `client_credentials`:
+
+```bash
+# 1. Register client (once)
+curl -s -X POST https://feedoracle.io/mcp/register \
+  -H "Content-Type: application/json" \
+  -d '{"client_name":"my-agent","grant_types":["client_credentials"],"redirect_uris":["https://localhost"]}'
+# Response: {"client_id": "fo_client_...", "client_secret": "fo_secret_..."}
+
+# 2. Get Bearer token
+curl -s -X POST https://feedoracle.io/mcp/token \
+  -d "grant_type=client_credentials&client_id=fo_client_...&client_secret=fo_secret_...&scope=mcp:read"
+# Response: {"access_token": "fo_cc_...", "token_type": "Bearer", "expires_in": 3600}
+
+# 3. Connect to MCP
+curl -N -H "Authorization: Bearer fo_cc_..." https://feedoracle.io/mcp/sse
+
+# 4. Revoke when done (RFC 7009)
+curl -s -X POST https://feedoracle.io/mcp/revoke \
+  -d "token=fo_cc_...&client_id=fo_client_...&client_secret=fo_secret_..."
+```
+
+OAuth discovery: [feedoracle.io/.well-known/oauth-authorization-server](https://feedoracle.io/.well-known/oauth-authorization-server)
+
+---
+
+## Autonomous USDC Upgrade (Polygon)
+
+Agents can upgrade tier without human intervention:
+
+```bash
+# 1. Get pricing
+curl -s https://feedoracle.io/usdc/pricing
+
+# 2. Create payment intent
+curl -s -X POST https://feedoracle.io/usdc/intent \
+  -d '{"tier":"starter","client_id":"fo_client_..."}'
+# Response: {"payment_id": "fo_pay_...", "amount_usdc": 99, "payment_wallet": "0x9f59...", "chain_id": 137}
+
+# 3. Send USDC on Polygon
+#    Native USDC (0x3c499c) and USDC.e (0x2791) both accepted.
+
+# 4. Submit TX hash -> API key issued automatically
+curl -s -X POST https://feedoracle.io/usdc/verify \
+  -d '{"payment_id":"fo_pay_...","tx_hash":"0x..."}'
+# Response: {"status": "fulfilled", "api_key": "fo_p_...", "tier": "starter"}
+
+# Recovery: key is permanent, retrievable by payment_id or tx_hash
+curl -s https://feedoracle.io/usdc/recover/{tx_hash}
+```
+
+**Tested in production:** [TX 0x2be6dd...f95905](https://polygonscan.com/tx/0x2be6dd56aed6e45f5bacb0af53b95e7cded8b36885aabba12cb7bac282f95905) — Polygon mainnet, 67 confirmations, key issued automatically.
+
+---
+
+## Public Verification Script
+
+```bash
+# 38 independent checks. No account, no API key, no FeedOracle trust.
+curl -O https://feedoracle.io/feedoracle_agent_verify.py
+python3 feedoracle_agent_verify.py
+# 38/38 checks passed
+```
+
 
 ---
 
@@ -77,7 +146,7 @@ Free tier: 100 calls/day — no API key required to start.
 
 ---
 
-## Enterprise Trust Layer (New in v3.0)
+## Enterprise Trust Layer (New in v3.1)
 
 Every response from the MCP server now includes 6 trust layers:
 
@@ -124,7 +193,7 @@ schema_ref    → Versioned JSON Schema reference (e.g. "mica/v1")
 
 ---
 
-## Response Schema (v3.0)
+## Response Schema (v3.1)
 
 Every tool returns the same envelope, now with JWS, SLA, trust metadata:
 
@@ -230,8 +299,8 @@ Not covered (process/legal, not data-trackable): Art. 6, 9, 18, 21
 |------|-----------|-------------|---------|-------------|-------|
 | Anonymous | 20 | — | — | ✓ (read) | Free |
 | Free (key) | 100 | — | — | ✓ | Free |
-| Starter | 5,000 | ✓ | ✓ | ✓ | $99/mo |
-| Pro | 25,000 | ✓ | ✓ | ✓ + priority | $299/mo |
+| Starter | 5,000 | ✓ | ✓ | ✓ | $99/mo or 99 USDC |
+| Pro | 25,000 | ✓ | ✓ | ✓ + priority | $299/mo or 299 USDC |
 | Enterprise | Unlimited | ✓ | ✓ | Full (agent trust, streaming) | Contact |
 
 ---
