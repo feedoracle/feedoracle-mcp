@@ -64,7 +64,7 @@ All evidence artifacts follow these normalization rules:
 - **Symbols**: Resolved to canonical slug via `asset.resolved_slug` field
 - **Prices**: Denominated in USD unless explicitly EUR (EURC, EURI)
 - **Timestamps**: UTC (ISO 8601), timezone-naive internally
-- **Thresholds**: MiCA-defined where applicable (e.g., €5B significant issuer)
+- **Thresholds**: MiCA-defined where applicable (e.g., EUR 5B significant issuer)
 - **Confidence**: 0.0 - 1.0 scale, source-weighted
 - **Schema version**: Declared in every response (`schema_version: "2.3"`)
 
@@ -82,7 +82,7 @@ Every MCP tool response is cryptographically signed:
 - **Content hash**: SHA256 of the canonical JSON payload (excluding `signature` field)
 - **Scope**: `mcp-tool-response`
 
-Verification path: Fetch JWKS → extract public key by `kid` → verify signature against `content_hash` → compare `content_hash` against locally computed hash of the response body.
+Verification path: Fetch JWKS -> extract public key by `kid` -> verify signature against `content_hash` -> compare `content_hash` against locally computed hash of the response body.
 
 Key rotation: New keys are added to JWKS before activation. Old keys remain valid for 90 days after deactivation. Key rotation events are logged in the changelog.
 
@@ -103,15 +103,28 @@ Every evidence artifact exists in one of these states:
 
 State transitions:
 ```
-CURRENT → STALE        (freshness_target exceeded without refresh)
-CURRENT → CORRECTED    (same tool, same inputs, newer data)
-CURRENT → SUPERSEDED   (schema change or source change)
-CURRENT → DISPUTED     (conflict reported via dispute process)
-CURRENT → RETRACTED    (source error, system fault, or manual withdrawal)
-STALE   → CURRENT      (data refreshed within parameters)
+CURRENT -> STALE        (freshness_target exceeded without refresh)
+CURRENT -> CORRECTED    (same tool, same inputs, newer data)
+CURRENT -> SUPERSEDED   (schema change or source change)
+CURRENT -> DISPUTED     (conflict reported via dispute process)
+CURRENT -> RETRACTED    (source error, system fault, or manual withdrawal)
+STALE   -> CURRENT      (data refreshed within parameters)
 ```
 
 Corrected and superseded artifacts remain queryable for audit purposes. The `corrected_by` or `superseded_by` field links to the replacement artifact.
+
+### Transition Authority
+
+| Transition | Who May Trigger | Control Process |
+|------------|----------------|----------------|
+| CURRENT -> STALE | System (automatic) | Freshness timer expiry; no human approval needed |
+| CURRENT -> CORRECTED | System (automatic) | New tool response for same input_hash supersedes prior; logged in state_log |
+| CURRENT -> SUPERSEDED | Engineering (manual) | Schema migration or source replacement; requires changelog entry |
+| CURRENT -> DISPUTED | External party or internal QA | Filed via `audit_log` with `decision_type: "dispute"`; triggers SLA clock |
+| CURRENT -> RETRACTED | Operations lead (manual) | Requires documented reason; artifact remains queryable |
+| DISPUTED -> CORRECTED/RETRACTED | Operations lead | Resolution within Dispute-SLA; logged in audit trail |
+
+No lifecycle transition may occur without a corresponding entry in `evidence_state_log`.
 
 ---
 
@@ -143,21 +156,38 @@ FeedOracle never silently serves stale data as fresh. Every degradation is visib
 
 ---
 
-## 9. Correction and Dispute Process
+## 9. Correction, Dispute, and Retraction
 
-**Correction**: When FeedOracle identifies an error in prior evidence:
+### Correction
+
+When FeedOracle identifies an error in prior evidence:
 1. A new artifact is created with the corrected data
 2. The original artifact's state is set to `CORRECTED`
 3. The original artifact gains a `corrected_by` field pointing to the new artifact
 4. Both artifacts remain queryable
 
-**Dispute**: When a third party reports a conflict:
+### Dispute Process and SLA
+
+When a third party reports a conflict:
 1. Dispute is logged via `audit_log` with `decision_type: "dispute"`
 2. The disputed artifact's state is set to `DISPUTED`
 3. FeedOracle investigates and either confirms, corrects, or retracts
 4. Resolution is logged in the audit trail
 
-**Retraction**: When evidence must be withdrawn:
+**Dispute-SLA:**
+
+| Stage | Target | Description |
+|-------|--------|-------------|
+| Acknowledgement | 4 hours | Dispute receipt confirmed, ticket created |
+| Classification | 24 hours | Dispute classified as source error, normalization error, system fault, or invalid |
+| Resolution | 5 business days | Artifact confirmed, corrected, or retracted; resolution logged in audit trail |
+| Escalation | If unresolved after 5 days | Escalated to operations lead; interim `DISPUTED` state remains visible |
+
+All dispute communications are logged. The disputed artifact remains queryable with `DISPUTED` state throughout the process. Resolution always produces an audit trail entry visible to the original reporter.
+
+### Retraction
+
+When evidence must be withdrawn:
 1. Artifact state is set to `RETRACTED`
 2. `retracted_reason` field explains why
 3. The artifact remains queryable but clearly marked
@@ -180,6 +210,8 @@ FeedOracle operates as **evidence infrastructure**:
 
 Users are responsible for their own compliance decisions. FeedOracle provides the evidence basis; the decision authority remains with the user or their compliance function.
 
+**Downstream use in autonomous systems:** When FeedOracle evidence artifacts are consumed by autonomous agents, trading algorithms, or automated decision pipelines, the operator of that system bears full responsibility for the actions taken. FeedOracle provides machine-verifiable inputs; it does not control, endorse, or accept liability for downstream execution based on those inputs. Users integrating FeedOracle evidence into agentic workflows must implement their own safeguards, human oversight mechanisms, and fallback procedures as required by applicable regulation (including EU AI Act Art. 14 for high-risk AI systems).
+
 ---
 
 ## 11. Governance
@@ -200,29 +232,38 @@ Users are responsible for their own compliance decisions. FeedOracle provides th
 - Breaking changes require major version increment
 - All changes logged in CHANGELOG.md with date and scope
 
+### Operational Roles
+
+| Role | Responsibility | Lifecycle Authority |
+|------|---------------|-------------------|
+| System (automated) | Freshness monitoring, auto-correction | STALE, CORRECTED (same-input refresh) |
+| Engineering | Schema changes, source integration | SUPERSEDED (with changelog) |
+| Operations lead | Incident response, dispute resolution | RETRACTED, DISPUTED -> resolution |
+| External parties | Report conflicts or inconsistencies | File DISPUTED via audit_log |
+
 ---
 
 ## 12. Acceptance Targets
 
 FeedOracle Evidence is designed for acceptance by, in priority order:
 
-1. **Agent developers** building autonomous compliance workflows
-2. **Compliance officers** verifying stablecoin and RWA regulatory status
-3. **Risk teams** assessing counterparty and custody exposure
-4. **Internal audit functions** replaying and verifying agent decisions
-5. **Enterprise procurement** evaluating evidence infrastructure vendors
-6. **External auditors** verifying compliance evidence trails
+1. **Compliance officers** verifying stablecoin and RWA regulatory status
+2. **Risk teams** assessing counterparty and custody exposure
+3. **Internal audit functions** replaying and verifying agent decisions
+4. **Enterprise procurement** evaluating evidence infrastructure vendors
+5. **External auditors** verifying compliance evidence trails
+6. **Agent developers** building autonomous compliance workflows
 
 Each audience has specific needs:
 
 | Audience | Primary Need | FeedOracle Feature |
 |----------|-------------|-------------------|
-| Agent developers | Quick start, API clarity | MCP tools, OAuth M2M, unit billing |
-| Compliance officers | Human-readable verdicts, coverage | `ai_explain`, evidence packs, MiCA mapping |
-| Risk teams | Provenance, confidence, degradation | `ai_provenance`, SLA metadata, staleness |
-| Audit functions | Replay, chain integrity, evidence snapshots | `audit_trail`, `audit_verify`, evidence cache |
-| Procurement | SLA, governance, policy | This document, SLO targets, CHANGELOG |
+| Compliance officers | Human-readable verdicts, coverage | `ai_explain`, evidence packs, MiCA mapping, `summary` field |
+| Risk teams | Provenance, confidence, degradation | `ai_provenance`, SLA metadata, staleness flags |
+| Audit functions | Replay, chain integrity, evidence snapshots | `audit_trail`, `audit_verify`, evidence lifecycle |
+| Procurement | SLA, governance, policy | This document, SLO targets, CHANGELOG, dispute-SLA |
 | External auditors | Independent verification, no trust required | Public JWKS, verify scripts, dispute process |
+| Agent developers | Quick start, API clarity, unit economics | MCP tools, OAuth M2M, unit billing, KYA |
 
 ---
 

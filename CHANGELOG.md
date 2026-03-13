@@ -4,7 +4,7 @@
 
 ### Unit-Based Billing
 - Stripe Billing Meter for automated overage charging (Pro/Agent tiers)
-- 39 tools classified by weight: Light (1 unit), Medium (3 units), Heavy (10 units)
+- 27 MCP tools + internal system tools classified by weight: Light (1 unit), Medium (3 units), Heavy (10 units)
 - Free tier: 300 units/day hard limit
 - Pro tier: 15,000 units/month included, €0.005/unit overage
 - Agent tier: 150,000 units/month included, €0.003/unit overage
@@ -29,10 +29,20 @@
 - 4 REST endpoints: trail, verify, entry, stats
 - Evidence snapshots preserved for regulatory replay
 
+### Evidence Trust Policy
+- Formal Trust Policy v1.0 (13 sections)
+- Evidence lifecycle states: CURRENT, STALE, CORRECTED, SUPERSEDED, DISPUTED, RETRACTED
+- Dispute-SLA: acknowledge 4h, classify 24h, resolve 5 business days
+- Liability boundary with explicit downstream agentic execution clause
+- Lifecycle transition authority matrix (who may trigger each state change)
+- Human-readable `summary` field in every MCP tool response
+- Evidence artifact auto-registration with state tracking
+- 7 reference workflows + 1 failure-path workflow
+
 ### Infrastructure
-- New DB tables: `kya_profiles`, `kya_events`, `audit_decisions`, `audit_evidence_cache`, `stripe_customers`
+- New DB tables: `kya_profiles`, `kya_events`, `audit_decisions`, `audit_evidence_cache`, `evidence_artifacts`, `evidence_state_log`, `stripe_customers`
 - `usage_log` table extended with `units` column (backfilled)
-- New modules: `kya.py`, `audit_trail.py`
+- New modules: `kya.py`, `audit_trail.py`, `evidence_lifecycle.py`
 - Stripe objects: 1 Billing Meter, 2 Metered Prices
 - Total MCP tools: 27 (was 22)
 - Anthropic MCP Directory submission (Anthropic crawling confirmed)
