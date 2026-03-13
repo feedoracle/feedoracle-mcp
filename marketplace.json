@@ -1,16 +1,16 @@
 {
   "schema_version": "1.0",
   "name": "FeedOracle Compliance",
-  "description": "Real-time MiCA regulatory compliance and RWA risk intelligence. 18 tools covering 19 MiCA articles across 80+ stablecoins. Cryptographically signed responses.",
-  "version": "2.3.1",
+  "description": "MiCA compliance, RWA risk intelligence, and AI agent trust infrastructure. 27 tools with KYA (Know Your Agent) identity, audit trail, and unit-based billing. Cryptographically signed responses.",
+  "version": "4.0.0",
   "author": "FeedOracle",
   "homepage": "https://feedoracle.io",
   "icon": "https://feedoracle.io/favicon.png",
   "transport": "streamable-http",
   "url": "https://feedoracle.io/mcp/",
-  "categories": ["compliance", "finance", "regulatory", "blockchain"],
-  "tags": ["MiCA", "stablecoin", "RWA", "compliance", "EU", "DORA", "CSRD"],
+  "categories": ["compliance", "finance", "regulatory", "blockchain", "audit"],
+  "tags": ["MiCA", "stablecoin", "RWA", "compliance", "EU", "DORA", "CSRD", "KYA", "audit-trail"],
   "requires_auth": false,
   "free_tier": true,
-  "tool_count": 18
+  "tool_count": 27
 }

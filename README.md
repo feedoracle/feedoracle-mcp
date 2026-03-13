@@ -1,10 +1,10 @@
-# FeedOracle MCP Server v3.1
+# FeedOracle MCP Server v4.0
 
 **Enterprise MiCA compliance, RWA risk intelligence, AI Evidence Layer, and Enterprise Trust Layer for AI agents.**
 
 Real-time monitoring of 18 MiCA articles across 105+ stablecoins and RWA protocols — cryptographically signed (JWS RFC 7515), machine-readable, enterprise-ready. Every response includes SLA quality signals, trust metadata, and is logged in an append-only Evidence Registry.
 
-> **New in v3.1:** Enterprise Trust Layer — JWS signing, versioned schemas, evidence registry, SLA layer, agent trust management, streaming evidence (SSE), deterministic replay, and zero-trust validation SDK.
+> **New in v4.0:** Unit-Based Billing, Know Your Agent (KYA) trust framework, Audit Trail for agent decisions. **v3.1:** Enterprise Trust Layer — JWS signing, versioned schemas, evidence registry, SLA layer, agent trust management, streaming evidence (SSE), deterministic replay, and zero-trust validation SDK.
 
 🔗 **Landing Page:** [feedoracle.io/mcp](https://feedoracle.io/mcp)
 📋 **Discovery:** [feedoracle.io/mcp/.well-known/mcp/server.json](https://feedoracle.io/mcp/.well-known/mcp/server.json)
@@ -27,7 +27,7 @@ claude mcp add --transport http feedoracle https://feedoracle.io/mcp/
 }
 ```
 
-Free tier: 100 calls/day — no API key required to start.
+Free tier: 300 units/day — no API key required to start.
 
 ---
 
@@ -100,7 +100,7 @@ python3 feedoracle_agent_verify.py
 
 ---
 
-## Tools (22)
+## Tools (27)
 
 ### 🤖 AI Evidence Layer — 4 tools
 
@@ -193,7 +193,7 @@ schema_ref    → Versioned JSON Schema reference (e.g. "mica/v1")
 
 ---
 
-## Response Schema (v3.1)
+## Response Schema (v4.0)
 
 Every tool returns the same envelope, now with JWS, SLA, trust metadata:
 
@@ -295,13 +295,49 @@ Not covered (process/legal, not data-trackable): Art. 6, 9, 18, 21
 
 ## Pricing
 
-| Tier | Calls/day | HEAVY Tools | Reports | Trust Layer | Price |
-|------|-----------|-------------|---------|-------------|-------|
-| Anonymous | 20 | — | — | ✓ (read) | Free |
-| Free (key) | 100 | — | — | ✓ | Free |
-| Starter | 5,000 | ✓ | ✓ | ✓ | $99/mo or 99 USDC |
-| Pro | 25,000 | ✓ | ✓ | ✓ + priority | $299/mo or 299 USDC |
-| Enterprise | Unlimited | ✓ | ✓ | Full (agent trust, streaming) | Contact |
+Unit-based billing — pay for tool complexity, not raw calls.
+
+| Tier | Price | Included | Overage |
+|------|-------|----------|---------|
+| **Free** | €0/mo | 300 units/day | Hard limit |
+| **Pro** | €49/mo | 15,000 units/mo | €0.005/unit |
+| **Agent** | €299/mo | 150,000 units/mo | €0.003/unit |
+| **Enterprise** | Custom | Unlimited | Negotiated |
+
+Tool weights: Light (1 unit) · Medium (3 units) · Heavy (10 units). See [docs/BILLING.md](docs/BILLING.md) for full weight table.
+
+Pricing page: [feedoracle.io/pricing.html](https://feedoracle.io/pricing.html)
+Weights API: `GET /api/billing/weights`
+
+
+## Know Your Agent (KYA)
+
+Agent identity and trust scoring for autonomous AI systems. Agents register metadata (name, purpose, org, jurisdiction) and receive a trust score (0-100) that unlocks progressively more tools.
+
+| Trust Level | Score | Access |
+|-------------|-------|--------|
+| UNVERIFIED | <25 | Light tools only |
+| KNOWN | 25-54 | + evidence packs, provenance |
+| TRUSTED | 55-79 | + generate_report |
+| CERTIFIED | 80+ | + guaranteed SLA |
+
+MCP tools: `kya_register`, `kya_status`. See [docs/KYA.md](docs/KYA.md).
+
+---
+
+## Audit Trail — Decision Logging
+
+Tamper-proof, chain-linked decision log for agent accountability. Every tool call is cached as evidence; agents log decisions referencing prior evidence via `request_id`. Chain integrity is SHA256-verified.
+
+```
+Agent calls peg_deviation (fo-abc123)
+Agent calls compliance_preflight (fo-def456)
+Agent decides: PASS
+Agent calls audit_log with evidence_request_ids: [fo-abc123, fo-def456]
+→ chain-linked entry with trail_id, evidence_hash, chain_hash
+```
+
+MCP tools: `audit_log` (3 units), `audit_query` (1 unit), `audit_verify` (1 unit). See [docs/AUDIT_TRAIL.md](docs/AUDIT_TRAIL.md).
 
 ---
 
