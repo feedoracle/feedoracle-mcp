@@ -350,3 +350,153 @@ open https://feedoracle.io/trust/
 🌐 [feedoracle.io](https://feedoracle.io) · 📖 [Docs](https://feedoracle.io/docs) · 🏥 [Health](https://feedoracle.io/mcp/health) · 🛡️ [Trust](https://feedoracle.io/trust) · 📊 [Uptime](https://uptime.feedoracle.io)
 
 **License:** Proprietary — © 2026 FeedOracle.
+
+---
+
+## Setup
+
+1. Visit the [Anthropic MCP Directory](https://claude.com/connectors)
+2. Find **FeedOracle Compliance & Risk Intelligence** and click Connect
+3. Complete OAuth authentication (or use free tier without auth)
+4. Start querying — no configuration required
+
+**Direct connection (Claude Code):**
+```bash
+claude mcp add --transport http feedoracle https://mcp.feedoracle.io/mcp
+```
+
+**Claude Desktop** (`claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "feedoracle": {
+      "url": "https://mcp.feedoracle.io/mcp"
+    }
+  }
+}
+```
+
+---
+
+## Examples
+
+### Example 1: MiCA Compliance Check for a Stablecoin
+
+**User prompt:** "Is USDC compliant under EU MiCA regulation?"
+
+**Expected behavior:**
+- Calls `mica_status` with `token_symbol: "USDC"`
+- Returns authorization status (COMPLIANT/PENDING/NOT_AUTHORIZED), ESMA/EBA register cross-reference, applicable MiCA articles
+- Includes cryptographic evidence pack with JWS signature for audit trail
+
+**Example response summary:**
+```
+USDC — MiCA Status: COMPLIANT (Art. 48 EMT)
+Issuer: Circle Internet Financial
+ESMA Register: Verified
+Evidence Pack: FO-AIG-XXXX | Signed: ES256K
+```
+
+---
+
+### Example 2: Stablecoin Risk Assessment Before Settlement
+
+**User prompt:** "Is USDT safe to use for DeFi settlement right now? Check peg stability and operational risk."
+
+**Expected behavior:**
+- Calls `peg_deviation` for real-time peg status
+- Calls `risk_assessment` from Stablecoin Risk MCP for 7-signal risk score
+- Returns SAFE/CAUTION/AVOID verdict with confidence score, peg deviation %, and risk breakdown
+
+**Example response summary:**
+```
+USDT Peg: 0.03% deviation — STABLE ✅
+Risk Score: 42/100 — CAUTION ⚠️
+Signals: Custody concentration HIGH, Redemption 24h OK, Cross-chain NORMAL
+Recommendation: Acceptable for settlement under 100k USD
+```
+
+---
+
+### Example 3: Macro Regime Check for Trading Agent
+
+**User prompt:** "What is the current macro regime? Should my DeFi agent be risk-on or risk-off?"
+
+**Expected behavior:**
+- Calls `macro_regime` from Macro MCP (premium) or `market_stress` + `recession_risk` (free)
+- Returns RISK_ON/NEUTRAL/RISK_OFF/STRESS classification with 7 weighted signals
+- Includes Fed rate outlook, yield curve status, VIX, credit spreads
+
+**Example response summary:**
+```
+Macro Regime: RISK_OFF (confidence: 0.78)
+Risk Score: 67/100
+Signals: Yield curve INVERTED, VIX ELEVATED, Credit spreads WIDE
+Fed: HOLD — next FOMC: 2026-03-19
+Recommendation: Reduce DeFi exposure, favor stablecoins
+```
+
+---
+
+### Example 4: Full DORA Compliance Evidence for a Protocol
+
+**User prompt:** "Generate a DORA compliance evidence report for Aave. I need it for our regulatory audit next week."
+
+**Expected behavior:**
+- Calls `evidence_bundle` with framework DORA
+- Calls `generate_report` (API key required) to produce signed PDF
+- PDF is XRPL-anchored with deterministic replay proof
+- Returns download link + Evidence Registry entry
+
+**Example response summary:**
+```
+DORA Evidence Pack: Aave
+Art. 28 (ICT Third Party): 3 custodians identified, concentration risk: LOW
+Art. 30 (Contractual arrangements): 2/3 verified
+PDF Report: Signed (ES256K), XRPL anchor: rXXX...
+Registry Entry: FO-DORA-AAVE-20260313
+Replay URL: /evidence/replay/FO-DORA-AAVE-20260313
+```
+
+---
+
+## Authentication
+
+This server supports OAuth 2.0 (Authorization Code + PKCE) for user-facing flows and `client_credentials` for autonomous agent-to-agent authentication.
+
+- **Free tier:** No authentication required (20 calls/day anonymous, 100/day with free key)
+- **OAuth Discovery:** `https://mcp.feedoracle.io/.well-known/oauth-authorization-server`
+- **Scopes:** `mcp:read`, `mcp:compliance:read`, `mcp:risk:read`, `mcp:macro:read`, `mcp:verified-reports:read`
+
+For testing accounts or enterprise evaluation access, contact: [mcp@feedoracle.io](mailto:mcp@feedoracle.io)
+
+---
+
+## Privacy Policy
+
+FeedOracle collects minimal data necessary to operate the service.
+
+**Data collected:**
+- OAuth tokens (stored encrypted, auto-expire after 1 hour)
+- API usage metrics (call count, tool name, timestamp) — no query content stored
+- Evidence packs (compliance evidence only — no personal data)
+
+**Data NOT collected:**
+- User query content is not stored or logged
+- No personal identifiers beyond email (optional, for paid accounts)
+- No data sold or shared with third parties
+
+**Data retention:** Usage metrics retained 90 days. Evidence registry entries retained indefinitely (compliance audit requirement).
+
+**Full Privacy Policy:** [feedoracle.io/privacy](https://feedoracle.io/privacy)
+
+**GDPR:** FeedOracle is operated from Germany. Data processed under GDPR Art. 6(1)(b) — contract performance.
+
+---
+
+## Support
+
+- **Email:** [mcp@feedoracle.io](mailto:mcp@feedoracle.io)
+- **Documentation:** [feedoracle.io/docs](https://feedoracle.io/docs)
+- **Status / Uptime:** [uptime.feedoracle.io](https://uptime.feedoracle.io)
+- **Issues:** [feedoracle.io/support](https://feedoracle.io/support)
