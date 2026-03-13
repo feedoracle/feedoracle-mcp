@@ -113,12 +113,16 @@ STALE   -> CURRENT      (data refreshed within parameters)
 
 Corrected and superseded artifacts remain queryable for audit purposes. The `corrected_by` or `superseded_by` field links to the replacement artifact.
 
+**Distinction between CORRECTED and SUPERSEDED:**
+- `CORRECTED`: The same artifact type and factual basis, updated with newer or more accurate data from the same source structure. The input query is identical; the output changed because the underlying data changed.
+- `SUPERSEDED`: Replaced by a structurally different artifact — new schema version, new source integration, new normative basis, or fundamentally different methodology. The replacement may not be directly comparable to the original.
+
 ### Transition Authority
 
 | Transition | Who May Trigger | Control Process |
 |------------|----------------|----------------|
 | CURRENT -> STALE | System (automatic) | Freshness timer expiry; no human approval needed |
-| CURRENT -> CORRECTED | System (automatic) | New tool response for same input_hash supersedes prior; logged in state_log |
+| CURRENT -> CORRECTED | System (automatic) | New verified response for same input_hash corrects the prior artifact; logged in state_log |
 | CURRENT -> SUPERSEDED | Engineering (manual) | Schema migration or source replacement; requires changelog entry |
 | CURRENT -> DISPUTED | External party or internal QA | Filed via `audit_log` with `decision_type: "dispute"`; triggers SLA clock |
 | CURRENT -> RETRACTED | Operations lead (manual) | Requires documented reason; artifact remains queryable |
@@ -183,7 +187,7 @@ When a third party reports a conflict:
 | Resolution | 5 business days | Artifact confirmed, corrected, or retracted; resolution logged in audit trail |
 | Escalation | If unresolved after 5 days | Escalated to operations lead; interim `DISPUTED` state remains visible |
 
-All dispute communications are logged. The disputed artifact remains queryable with `DISPUTED` state throughout the process. Resolution always produces an audit trail entry visible to the original reporter.
+All dispute communications are logged. The disputed artifact remains queryable with `DISPUTED` state throughout the process. Resolution always produces an audit trail entry linked to the dispute record.
 
 ### Retraction
 
@@ -210,7 +214,7 @@ FeedOracle operates as **evidence infrastructure**:
 
 Users are responsible for their own compliance decisions. FeedOracle provides the evidence basis; the decision authority remains with the user or their compliance function.
 
-**Downstream use in autonomous systems:** When FeedOracle evidence artifacts are consumed by autonomous agents, trading algorithms, or automated decision pipelines, the operator of that system bears full responsibility for the actions taken. FeedOracle provides machine-verifiable inputs; it does not control, endorse, or accept liability for downstream execution based on those inputs. Users integrating FeedOracle evidence into agentic workflows must implement their own safeguards, human oversight mechanisms, and fallback procedures as required by applicable regulation (including EU AI Act Art. 14 for high-risk AI systems).
+**Downstream use in autonomous systems:** When FeedOracle evidence artifacts are consumed by autonomous agents, trading algorithms, or automated decision pipelines, the operator of that system bears full responsibility for the actions taken. FeedOracle provides machine-verifiable inputs. It does not control, endorse, or accept liability for downstream execution based on those inputs. Users integrating FeedOracle evidence into agentic workflows must implement their own safeguards, human oversight mechanisms, and fallback procedures as required by applicable regulation (including EU AI Act Art. 14 for high-risk AI systems).
 
 ---
 
