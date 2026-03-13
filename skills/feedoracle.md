@@ -1,7 +1,7 @@
 # FeedOracle MiCA Compliance Intelligence
 
 ## Quick Start
-FeedOracle provides 18 tools for MiCA regulatory compliance analysis. All responses are cryptographically signed and audit-ready.
+FeedOracle provides 27 tools for MiCA compliance, KYA agent identity, and audit trail regulatory compliance analysis. All responses are cryptographically signed and audit-ready.
 
 ## Key Tools
 

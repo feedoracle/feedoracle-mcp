@@ -1,8 +1,8 @@
 # FeedOracle MCP Server v4.0
 
-**Enterprise MiCA compliance, RWA risk intelligence, AI Evidence Layer, and Enterprise Trust Layer for AI agents.**
+**27 MCP tools across compliance, risk, evidence, KYA, and audit verification for AI agents.**
 
-Real-time monitoring of 18 MiCA articles across 105+ stablecoins and RWA protocols — cryptographically signed (JWS RFC 7515), machine-readable, enterprise-ready. Every response includes SLA quality signals, trust metadata, and is logged in an append-only Evidence Registry.
+Real-time monitoring of 18 MiCA articles across 105+ stablecoins — cryptographically signed (JWS RFC 7515), machine-readable, enterprise-ready. Every response includes SLA quality signals, trust metadata, and is logged in an append-only Evidence Registry.
 
 > **New in v4.0:** Unit-Based Billing, Know Your Agent (KYA) trust framework, Audit Trail for agent decisions. **v3.1:** Enterprise Trust Layer — JWS signing, versioned schemas, evidence registry, SLA layer, agent trust management, streaming evidence (SSE), deterministic replay, and zero-trust validation SDK.
 
@@ -102,51 +102,73 @@ python3 feedoracle_agent_verify.py
 
 ## Tools (27)
 
-### 🤖 AI Evidence Layer — 4 tools
+27 MCP tools across **compliance**, **risk**, **evidence**, **KYA**, and **audit verification** workflows.
 
-| Tool | Description |
-|------|-------------|
-| `ai_query` | Natural language → signed evidence bundle. Ask "Is USDC MiCA-compliant?" and receive a structured, cryptographically signed response |
-| `evidence_bundle` | Aggregated evidence pack for a token: MiCA status, peg, reserves, custody, macro context — one call replaces 23 API calls |
-| `ai_explain` | Grade explanation engine. "Why does EURC score B? What would make it Grade A?" |
-| `ai_provenance` | Full data lineage graph — from FRED series IDs and ESMA register entries to chain hash. 17 nodes, 17 individual hashes |
+### Compliance — 11 tools
 
-### 🟢 LIGHT — No key, instant
+| Tool | Weight | Description |
+|------|--------|-------------|
+| `compliance_preflight` | 3 | Pre-flight PASS/WARN/BLOCK decision for swap/transfer/custody |
+| `mica_status` | 1 | MiCA EU authorization status (ESMA/EBA cross-referenced) |
+| `mica_full_pack` | 10 | Full 12-article MiCA evidence pack (KEY) |
+| `mica_market_overview` | 10 | Market-wide MiCA status dashboard (KEY) |
+| `peg_deviation` | 1 | Real-time Art. 35 peg deviation |
+| `peg_history` | 3 | 30-day peg stability with depeg events |
+| `significant_issuer` | 1 | Art. 45/58 significant issuer assessment |
+| `interest_check` | 3 | Art. 23/52 interest prohibition scan |
+| `document_compliance` | 1 | Art. 29/30/55 recovery/redemption/audit status |
+| `reserve_quality` | 1 | Art. 24/25/53 reserve composition and eligibility |
+| `rlusd_integrity` | 3 | RLUSD reserve attestation verification |
 
-| Tool | MiCA Articles | Description |
-|------|---------------|-------------|
-| `compliance_preflight` | 5, 16, 17, 48 | Transaction check: PASS/WARN/BLOCK for swap/transfer/custody |
-| `mica_status` | 16, 17, 19, 20, 48 | EU authorization status — COMPLIANT/PENDING/NOT_AUTHORIZED/UNKNOWN |
-| `peg_deviation` | 35 | Real-time peg deviation. STABLE < 0.1%, WARN < 0.5%, ALERT < 2% |
-| `significant_issuer` | 45, 58 | SIGNIFICANT if reserve > €5B or daily tx > €1B. EBA oversight flag |
-| `document_compliance` | 29, 30, 37, 55 | Recovery/redemption plans + audit freshness. Score 0–100 |
-| `reserve_quality` | 24, 25, 36, 53 | Art. 53 eligibility %, liquidity score, reserve violations |
-| `custody_risk` | 26, 27, 54 | Custodian identity, segregation, SIFI status, SPOF detection |
-| `rlusd_integrity` | — | Real-time RLUSD reserve attestation |
-| `ping` | — | Connectivity test |
+### Risk & Evidence — 6 tools
 
-### 🟡 MEDIUM — No key, aggregated
+| Tool | Weight | Description |
+|------|--------|-------------|
+| `evidence_profile` | 3 | Multi-dimensional evidence grade A-F |
+| `evidence_leaderboard` | 3 | Top protocols ranked by evidence grade |
+| `evidence_bundle` | 10 | Multi-framework evidence aggregation (KEY) |
+| `custody_risk` | 3 | Custodian SIFI status, concentration risk |
+| `market_liquidity` | 3 | DEX liquidity depth, exit channels |
+| `macro_risk` | 1 | US macro risk composite (86 FRED series) |
 
-| Tool | MiCA Articles | Description |
-|------|---------------|-------------|
-| `peg_history` | 35 | 30-day peg history, stability score 0–100, depeg event count |
-| `interest_check` | 23, 52 | Interest prohibition scan. Scans 18,000+ DeFi pools for issuer yield |
-| `evidence_profile` | 36, 37, 45 | 9-dimension evidence grade A–F (governance, custody, reserves…) |
-| `market_liquidity` | 45, 51 | DEX liquidity depth and redemption exit channels |
-| `evidence_leaderboard` | 36, 37, 45 | Top 61 RWA protocols & 105+ stablecoins ranked by evidence grade |
-| `macro_risk` | — | US macro composite from 86 FRED series (recession, inflation, Fed) |
+### AI Gateway — 3 tools
 
-### 🔴 HEAVY — API key required
+| Tool | Weight | Description |
+|------|--------|-------------|
+| `ai_query` | 3 | Natural language evidence query (auto-routes) |
+| `ai_explain` | 10 | Grade explanation with counterfactual path |
+| `ai_provenance` | 10 | Full cryptographic provenance chain |
 
-| Tool | MiCA Articles | Description |
-|------|---------------|-------------|
-| `mica_full_pack` | 22–58 (12 articles) | Complete MiCA evidence for one token in one call |
-| `mica_market_overview` | All | Market-wide: peg alerts, significant issuers, interest violations, audit status |
-| `generate_report` | All | Signed PDF (MiCA, DORA, RWA Risk, Macro Risk), XRPL-anchored |
+### KYA (Know Your Agent) — 2 tools
 
----
+| Tool | Weight | Description |
+|------|--------|-------------|
+| `kya_register` | 0 | Register agent identity, get trust score |
+| `kya_status` | 0 | Check trust level and tool access |
 
-## Enterprise Trust Layer (New in v3.1)
+Trust levels: UNVERIFIED → KNOWN → TRUSTED → CERTIFIED. Higher trust unlocks more tools. See [docs/KYA.md](docs/KYA.md).
+
+### Audit Trail — 3 tools
+
+| Tool | Weight | Description |
+|------|--------|-------------|
+| `audit_log` | 3 | Log chain-linked decision with evidence refs |
+| `audit_query` | 1 | Query agent's decision history |
+| `audit_verify` | 1 | Verify chain integrity (tamper detection) |
+
+Tamper-proof, SHA256 chain-linked decision logging. See [docs/AUDIT_TRAIL.md](docs/AUDIT_TRAIL.md).
+
+### System — 2 tools
+
+| Tool | Weight | Description |
+|------|--------|-------------|
+| `ping` | 0 | Connectivity test |
+| `generate_report` | 10 | Signed XRPL-anchored PDF report (KEY) |
+
+**Weight** = units consumed per call. Light (1) · Medium (3) · Heavy (10) · Free (0). See [docs/BILLING.md](docs/BILLING.md).
+
+
+## Enterprise Trust Layer
 
 Every response from the MCP server now includes 6 trust layers:
 

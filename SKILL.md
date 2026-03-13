@@ -1,4 +1,4 @@
-# FeedOracle MCP — Skill v2.3.1
+# FeedOracle MCP — Skill v4.0
 
 ## What this server does
 
