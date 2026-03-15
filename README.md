@@ -11,7 +11,7 @@ Every response cryptographically signed. Every decision audit-ready.
 [![Stablecoins](https://img.shields.io/badge/stablecoins-105+-8A9DB4?style=flat-square)](https://feedoracle.io)
 [![Free Tier](https://img.shields.io/badge/free_tier-100_calls%2Fday-10B898?style=flat-square)](https://feedoracle.io/pricing.html)
 
-[Website](https://feedoracle.io) Â· [Docs](https://feedoracle.io/docs.html) Â· [MCP Tools](https://feedoracle.io/mcp.html) Â· [Trust Policy](https://feedoracle.io/trust/) Â· [Pricing](https://feedoracle.io/pricing.html)
+[Website](https://feedoracle.io) · [Docs](https://feedoracle.io/docs.html) · [MCP Tools](https://feedoracle.io/mcp.html) · [Trust Policy](https://feedoracle.io/trust/) · [Pricing](https://feedoracle.io/pricing.html)
 
 </div>
 
@@ -22,6 +22,8 @@ Every response cryptographically signed. Every decision audit-ready.
 AI agents make compliance decisions every day. But nobody can prove what data they used, when they used it, or whether it was tampered with.
 
 Regulators don't accept "trust me." They require **verifiable evidence**.
+
+[![FeedOracle Compliance Server MCP server](https://glama.ai/mcp/servers/feedoracle/feedoracle-mcp/badges/card.svg)](https://glama.ai/mcp/servers/feedoracle/feedoracle-mcp)
 
 ## What FeedOracle does
 
@@ -93,7 +95,7 @@ You get back signed, verifiable, audit-ready evidence:
 }
 ```
 
-## 3 MCP servers Â· 53 tools
+## 3 MCP servers · 53 tools
 
 | Server | Tools | Purpose |
 |--------|-------|---------|
@@ -101,9 +103,9 @@ You get back signed, verifiable, audit-ready evidence:
 | **Stablecoin Risk** | 13 | 7-signal risk scoring, peg monitoring, 105+ tokens |
 | **Macro Intelligence** | 13 | 86 FRED + 20 ECB indicators, regime classification |
 
-> **"May your agent trade this?"** â†’ Compliance Oracle
-> **"Should your agent trade now?"** â†’ Macro Intelligence  
-> **"Is this stablecoin safe?"** â†’ Stablecoin Risk
+> **"May your agent trade this?"** → Compliance Oracle
+> **"Should your agent trade now?"** → Macro Intelligence  
+> **"Is this stablecoin safe?"** → Stablecoin Risk
 
 <details>
 <summary>All 27 Compliance tools</summary>
@@ -143,7 +145,7 @@ You get back signed, verifiable, audit-ready evidence:
 <details>
 <summary>All 13 Stablecoin Risk tools</summary>
 
-`risk_assessment` Â· `peg_status` Â· `peg_history` Â· `supply_flow` Â· `holder_data` Â· `custody_data` Â· `redemption_data` Â· `cross_chain_data` Â· `leaderboard` Â· `compare` Â· `supported_tokens` Â· `methodology` Â· `ping`
+`risk_assessment` · `peg_status` · `peg_history` · `supply_flow` · `holder_data` · `custody_data` · `redemption_data` · `cross_chain_data` · `leaderboard` · `compare` · `supported_tokens` · `methodology` · `ping`
 
 Connect: `claude mcp add --transport sse feedoracle-risk https://feedoracle.io/mcp/risk/sse`
 
@@ -152,7 +154,7 @@ Connect: `claude mcp add --transport sse feedoracle-risk https://feedoracle.io/m
 <details>
 <summary>All 13 Macro Intelligence tools</summary>
 
-`economic_health` Â· `recession_risk` Â· `inflation_monitor` Â· `labor_market` Â· `gdp_tracker` Â· `fed_watch` Â· `yield_curve` Â· `defi_rates` Â· `consumer_sentiment` Â· `market_stress` Â· `safe_haven_flows` Â· `macro_regime` Â· `ping`
+`economic_health` · `recession_risk` · `inflation_monitor` · `labor_market` · `gdp_tracker` · `fed_watch` · `yield_curve` · `defi_rates` · `consumer_sentiment` · `market_stress` · `safe_haven_flows` · `macro_regime` · `ping`
 
 Connect: `claude mcp add --transport sse feedoracle-macro https://feedoracle.io/mcp/macro/sse`
 
@@ -190,10 +192,10 @@ curl -s https://feedoracle.io/evidence/replay/{pack_id}
 
 ## Built for
 
-- **Banks and insurers** â€” MiCA + DORA compliance evidence
-- **Stablecoin issuers** â€” reserve and peg monitoring, signed proof
-- **AI agent builders** â€” 53 MCP tools, every decision auditable
-- **Compliance teams** â€” replace manual evidence with automated proof
+- **Banks and insurers** – MiCA + DORA compliance evidence
+- **Stablecoin issuers** – reserve and peg monitoring, signed proof
+- **AI agent builders** – 53 MCP tools, every decision auditable
+- **Compliance teams** – replace manual evidence with automated proof
 
 ## Pricing
 
