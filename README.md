@@ -1,23 +1,62 @@
-# FeedOracle MCP Server v4.0
+<div align="center">
 
-**27 MCP tools across compliance, risk, evidence, KYA, and audit verification for AI agents.**
+# FeedOracle MCP Server
 
-Real-time monitoring of 18 MiCA articles across 105+ stablecoins — cryptographically signed (JWS RFC 7515), machine-readable, enterprise-ready. Every response includes SLA quality signals, trust metadata, and is logged in an append-only Evidence Registry.
+**Compliance evidence infrastructure for AI agents.**
 
-> **New in v4.0:** Unit-Based Billing, Know Your Agent (KYA) trust framework, Audit Trail for agent decisions. **v3.1:** Enterprise Trust Layer — JWS signing, versioned schemas, evidence registry, SLA layer, agent trust management, streaming evidence (SSE), deterministic replay, and zero-trust validation SDK.
+Every response cryptographically signed. Every decision audit-ready.
 
-🔗 **Landing Page:** [feedoracle.io/mcp](https://feedoracle.io/mcp)
-📋 **Discovery:** [feedoracle.io/mcp/.well-known/mcp/server.json](https://feedoracle.io/mcp/.well-known/mcp/server.json)
-📖 **Docs:** [feedoracle.io/docs](https://feedoracle.io/docs)
-🛡️ **Trust Proof:** [feedoracle.io/trust](https://feedoracle.io/trust)
+[![Server Status](https://img.shields.io/badge/server-live-10B898?style=flat-square)](https://feedoracle.io/mcp/health)
+[![Tools](https://img.shields.io/badge/MCP_tools-53-3B82F6?style=flat-square)](https://feedoracle.io/mcp.html)
+[![Stablecoins](https://img.shields.io/badge/stablecoins-105+-8A9DB4?style=flat-square)](https://feedoracle.io)
+[![Free Tier](https://img.shields.io/badge/free_tier-100_calls%2Fday-10B898?style=flat-square)](https://feedoracle.io/pricing.html)
 
-## Quick Start
+[Website](https://feedoracle.io) Â· [Docs](https://feedoracle.io/docs.html) Â· [MCP Tools](https://feedoracle.io/mcp.html) Â· [Trust Policy](https://feedoracle.io/trust/) Â· [Pricing](https://feedoracle.io/pricing.html)
+
+</div>
+
+---
+
+## The problem
+
+AI agents make compliance decisions every day. But nobody can prove what data they used, when they used it, or whether it was tampered with.
+
+Regulators don't accept "trust me." They require **verifiable evidence**.
+
+## What FeedOracle does
+
+FeedOracle is the **evidence layer** for AI compliance decisions. Connect your agent via MCP. Get signed evidence back.
+
+```
+Your AI agent                    FeedOracle                     Regulator
+     |                               |                              |
+     |-- "Is USDC MiCA compliant?" -->|                              |
+     |                               |-- Fetch from 7+ sources      |
+     |                               |-- Structure evidence          |
+     |                               |-- Sign (ECDSA ES256K)         |
+     |                               |-- Anchor (Polygon + XRPL)    |
+     |<-- Signed evidence pack ------|                              |
+     |                               |                              |
+     |    6 months later...          |                              |
+     |                               |                              |
+     |-- "Show proof" -------------------------------------------- >|
+     |                               |<-- Replay from registry -----|
+     |                               |-- hash_match: true --------->|
+     |                               |         Audit passed         |
+```
+
+## Quick start
+
+One command. No API key needed.
 
 ```bash
-# Claude Code (one command)
 claude mcp add --transport http feedoracle https://feedoracle.io/mcp/
+```
 
-# Claude Desktop — add to claude_desktop_config.json
+<details>
+<summary>Claude Desktop / Cursor / Windsurf</summary>
+
+```json
 {
   "mcpServers": {
     "feedoracle": {
@@ -27,534 +66,162 @@ claude mcp add --transport http feedoracle https://feedoracle.io/mcp/
 }
 ```
 
-Free tier: 300 units/day — no API key required to start.
+</details>
 
----
-
-## Agent M2M Auth (no browser, no human)
-
-Agents register and authenticate autonomously using `client_credentials`:
-
-```bash
-# 1. Register client (once)
-curl -s -X POST https://feedoracle.io/mcp/register \
-  -H "Content-Type: application/json" \
-  -d '{"client_name":"my-agent","grant_types":["client_credentials"],"redirect_uris":["https://localhost"]}'
-# Response: {"client_id": "fo_client_...", "client_secret": "fo_secret_..."}
-
-# 2. Get Bearer token
-curl -s -X POST https://feedoracle.io/mcp/token \
-  -d "grant_type=client_credentials&client_id=fo_client_...&client_secret=fo_secret_...&scope=mcp:read"
-# Response: {"access_token": "fo_cc_...", "token_type": "Bearer", "expires_in": 3600}
-
-# 3. Connect to MCP
-curl -N -H "Authorization: Bearer fo_cc_..." https://feedoracle.io/mcp/sse
-
-# 4. Revoke when done (RFC 7009)
-curl -s -X POST https://feedoracle.io/mcp/revoke \
-  -d "token=fo_cc_...&client_id=fo_client_...&client_secret=fo_secret_..."
-```
-
-OAuth discovery: [feedoracle.io/.well-known/oauth-authorization-server](https://feedoracle.io/.well-known/oauth-authorization-server)
-
----
-
-## Autonomous USDC Upgrade (Polygon)
-
-Agents can upgrade tier without human intervention:
-
-```bash
-# 1. Get pricing
-curl -s https://feedoracle.io/usdc/pricing
-
-# 2. Create payment intent
-curl -s -X POST https://feedoracle.io/usdc/intent \
-  -d '{"tier":"starter","client_id":"fo_client_..."}'
-# Response: {"payment_id": "fo_pay_...", "amount_usdc": 99, "payment_wallet": "0x9f59...", "chain_id": 137}
-
-# 3. Send USDC on Polygon
-#    Native USDC (0x3c499c) and USDC.e (0x2791) both accepted.
-
-# 4. Submit TX hash -> API key issued automatically
-curl -s -X POST https://feedoracle.io/usdc/verify \
-  -d '{"payment_id":"fo_pay_...","tx_hash":"0x..."}'
-# Response: {"status": "fulfilled", "api_key": "fo_p_...", "tier": "starter"}
-
-# Recovery: key is permanent, retrievable by payment_id or tx_hash
-curl -s https://feedoracle.io/usdc/recover/{tx_hash}
-```
-
-**Tested in production:** [TX 0x2be6dd...f95905](https://polygonscan.com/tx/0x2be6dd56aed6e45f5bacb0af53b95e7cded8b36885aabba12cb7bac282f95905) — Polygon mainnet, 67 confirmations, key issued automatically.
-
----
-
-## Public Verification Script
-
-```bash
-# 38 independent checks. No account, no API key, no FeedOracle trust.
-curl -O https://feedoracle.io/feedoracle_agent_verify.py
-python3 feedoracle_agent_verify.py
-# 38/38 checks passed
-```
-
-
----
-
-## Tools (27)
-
-27 MCP tools across **compliance**, **risk**, **evidence**, **KYA**, and **audit verification** workflows.
-
-### Compliance — 11 tools
-
-| Tool | Weight | Description |
-|------|--------|-------------|
-| `compliance_preflight` | 3 | Pre-flight PASS/WARN/BLOCK decision for swap/transfer/custody |
-| `mica_status` | 1 | MiCA EU authorization status (ESMA/EBA cross-referenced) |
-| `mica_full_pack` | 10 | Full 12-article MiCA evidence pack (KEY) |
-| `mica_market_overview` | 10 | Market-wide MiCA status dashboard (KEY) |
-| `peg_deviation` | 1 | Real-time Art. 35 peg deviation |
-| `peg_history` | 3 | 30-day peg stability with depeg events |
-| `significant_issuer` | 1 | Art. 45/58 significant issuer assessment |
-| `interest_check` | 3 | Art. 23/52 interest prohibition scan |
-| `document_compliance` | 1 | Art. 29/30/55 recovery/redemption/audit status |
-| `reserve_quality` | 1 | Art. 24/25/53 reserve composition and eligibility |
-| `rlusd_integrity` | 3 | RLUSD reserve attestation verification |
-
-### Risk & Evidence — 6 tools
-
-| Tool | Weight | Description |
-|------|--------|-------------|
-| `evidence_profile` | 3 | Multi-dimensional evidence grade A-F |
-| `evidence_leaderboard` | 3 | Top protocols ranked by evidence grade |
-| `evidence_bundle` | 10 | Multi-framework evidence aggregation (KEY) |
-| `custody_risk` | 3 | Custodian SIFI status, concentration risk |
-| `market_liquidity` | 3 | DEX liquidity depth, exit channels |
-| `macro_risk` | 1 | US macro risk composite (86 FRED series) |
-
-### AI Gateway — 3 tools
-
-| Tool | Weight | Description |
-|------|--------|-------------|
-| `ai_query` | 3 | Natural language evidence query (auto-routes) |
-| `ai_explain` | 10 | Grade explanation with counterfactual path |
-| `ai_provenance` | 10 | Full cryptographic provenance chain |
-
-### KYA (Know Your Agent) — 2 tools
-
-| Tool | Weight | Description |
-|------|--------|-------------|
-| `kya_register` | 0 | Register agent identity, get trust score |
-| `kya_status` | 0 | Check trust level and tool access |
-
-Trust levels: UNVERIFIED → KNOWN → TRUSTED → CERTIFIED. Higher trust unlocks more tools. See [docs/KYA.md](docs/KYA.md).
-
-### Audit Trail — 3 tools
-
-| Tool | Weight | Description |
-|------|--------|-------------|
-| `audit_log` | 3 | Log chain-linked decision with evidence refs |
-| `audit_query` | 1 | Query agent's decision history |
-| `audit_verify` | 1 | Verify chain integrity (tamper detection) |
-
-Tamper-proof, SHA256 chain-linked decision logging. See [docs/AUDIT_TRAIL.md](docs/AUDIT_TRAIL.md).
-
-### System — 2 tools
-
-| Tool | Weight | Description |
-|------|--------|-------------|
-| `ping` | 0 | Connectivity test |
-| `generate_report` | 10 | Signed XRPL-anchored PDF report (KEY) |
-
-**Weight** = units consumed per call. Light (1) · Medium (3) · Heavy (10) · Free (0). See [docs/BILLING.md](docs/BILLING.md).
-
-
-## Enterprise Trust Layer
-
-Every response from the MCP server now includes 6 trust layers:
+Then ask Claude:
 
 ```
-evidence{}    → SHA-256 content hash + pack_id + blockchain anchor reference
-jws{}         → RFC 7515 ES256K compact token (kid: fo-ecdsa-v1)
-sla{}         → confidence (0-1), freshness_seconds, per-source health, tier
-trust{}       → signature_present, schema_valid, registry_logged, replayable
-schema_ref    → Versioned JSON Schema reference (e.g. "mica/v1")
+Is USDC compliant for trading in the EU under MiCA?
 ```
 
-### 8 Trust Components
-
-| Component | Endpoint | Description |
-|-----------|----------|-------------|
-| **JWS Signing** | `/.well-known/jwks.json` | RFC 7515 ES256K signatures on every response. Verify via JWKS. |
-| **Versioned Schemas** | `GET /schemas/` | 8 JSON Schemas (Draft 2020-12): mica, dora, rwa, macro, stablecoin-risk, amlr, sla, evidence-envelope |
-| **Evidence Registry** | `GET /evidence/registry` | Append-only Compliance Transparency Log. Filters: framework, asset, date, limit |
-| **Evidence SLA** | _(in every response)_ | Machine-readable quality: freshness, confidence, per-source latency/status |
-| **Agent Trust** | `POST /ai/agent/register` | Agent registration with 90-day keys, reputation scoring (0-100), key rotation |
-| **Streaming Evidence** | `GET /evidence/stream` | SSE events: peg_deviation, regime_change, market_stress. State-change-only. |
-| **Deterministic Replay** | `GET /evidence/replay/{id}` | Byte-identical reconstruction from snapshot. `hash_match: true` = audit proof |
-| **Validation SDK** | `GET /verify/self-test` | Client-side verification: `pip install feedoracle-verify` — 7 independent checks |
-
-### Trust Layer Endpoints (15)
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/schemas/` | GET | Schema registry index |
-| `/schemas/v1/{framework}` | GET | Individual JSON Schema |
-| `/evidence/registry` | GET | Compliance Transparency Log (paginated, 8 filters) |
-| `/evidence/registry/{pack_id}` | GET | Single evidence pack detail |
-| `/evidence/registry/stats` | GET | Registry statistics |
-| `/evidence/stream` | GET | SSE real-time events |
-| `/evidence/stream/status` | GET | Stream poller status |
-| `/evidence/replay/{pack_id}` | GET | Deterministic audit replay |
-| `/evidence/snapshots/stats` | GET | Snapshot archive statistics |
-| `/ai/agent/register` | POST | Register AI agent |
-| `/ai/agent/{id}/trust` | GET | Agent trust status |
-| `/ai/agent/{id}/rotate-key` | POST | Key rotation |
-| `/ai/agent/leaderboard` | GET | Agent reputation ranking |
-| `/verify/sdk` | GET | SDK installation info |
-| `/verify/self-test` | GET | Live 7-check self-test |
-
----
-
-## Response Schema (v4.0)
-
-Every tool returns the same envelope, now with JWS, SLA, trust metadata:
+You get back signed, verifiable, audit-ready evidence:
 
 ```json
 {
-  "schema_version": "3.0",
-  "tool": "peg_deviation",
-  "request_id": "fo-abc123",
-  "timestamp": "2026-03-06T10:00:00Z",
-  "status": "COMPLIANT",
-  "reason_codes": ["MICA_COMPLIANT"],
-  "mica_articles": ["35"],
-  "confidence": 0.9,
-  "data": { "..." },
+  "decision": "PASS",
+  "confidence": 0.95,
   "evidence": {
-    "pack_id": "FO-AIG-ABC123",
-    "content_hash": "sha256:4b0552da...",
-    "anchor_ref": { "chain": "polygon", "status": "pending" }
+    "mica": { "status": "compliant", "issuer": "Circle" },
+    "grade": "A",
+    "pack_id": "FO-AIG-A8C3D2"
   },
-  "jws": {
-    "jws": "eyJhbGciOiJFUzI1NksiLCJraWQiOiJmby1lY2RzYS12MSJ9...",
-    "jws_header": { "alg": "ES256K", "kid": "fo-ecdsa-v1", "typ": "evidence+jwt" },
-    "jws_verification": { "jwks_url": "https://feedoracle.io/.well-known/jwks.json" }
-  },
-  "sla": {
-    "confidence": 0.87,
-    "freshness_seconds": 0,
-    "freshness_met": true,
-    "sources": { "available": 2, "total": 3 },
-    "staleness_flag": false,
-    "tier": "free"
-  },
-  "trust": {
-    "signature_present": true,
-    "signature_algorithm": "ES256K",
-    "content_hash_present": true,
-    "schema_valid": true,
-    "registry_logged": true,
-    "replayable": true,
-    "sla_confidence": 0.87,
-    "verify_url": "https://feedoracle.io/verify/self-test",
-    "sdk": "pip install feedoracle-verify"
-  },
-  "schema_ref": "mica/v1",
-  "schema_url": "https://feedoracle.io/schemas/v1/mica"
-}
-```
-
----
-
-## AI Gateway Example
-
-```json
-{
-  "tool": "ai_query",
-  "input": {
-    "query": "Is EURC MiCA-compliant and what is its reserve quality?"
+  "signature": {
+    "alg": "ES256K",
+    "independently_verifiable": true,
+    "verify": "https://feedoracle.io/.well-known/jwks.json"
   }
 }
-
-// Response: signed evidence bundle with JWS + SLA + trust metadata
-{
-  "intent": "mica_compliance",
-  "asset": "EURC",
-  "mica_compliant": true,
-  "grade": "A",
-  "score": 81.7,
-  "evidence": {
-    "pack_id": "FO-AIG-99F42D062F67",
-    "content_hash": "sha256:42738bace3...",
-    "verifiable": true
-  },
-  "jws": { "alg": "ES256K", "kid": "fo-ecdsa-v1", "..." },
-  "sla": { "confidence": 0.87, "freshness_met": true },
-  "trust": { "signature_present": true, "registry_logged": true, "replayable": true }
-}
 ```
 
----
+## 3 MCP servers Â· 53 tools
 
-## MiCA Coverage
+| Server | Tools | Purpose |
+|--------|-------|---------|
+| **Compliance Oracle** | 27 | MiCA status, evidence packs, DORA artifacts, audit trail |
+| **Stablecoin Risk** | 13 | 7-signal risk scoring, peg monitoring, 105+ tokens |
+| **Macro Intelligence** | 13 | 86 FRED + 20 ECB indicators, regime classification |
 
-19 articles covered across 22 regulatory tools (Art. 16/48, 22, 23/52, 24/25, 26/27, 28, 29/30, 35, 36, 37/55, 45/58, 51, 53, 66).
+> **"May your agent trade this?"** â†’ Compliance Oracle
+> **"Should your agent trade now?"** â†’ Macro Intelligence  
+> **"Is this stablecoin safe?"** â†’ Stablecoin Risk
 
-Not covered (process/legal, not data-trackable): Art. 6, 9, 18, 21
+<details>
+<summary>All 27 Compliance tools</summary>
 
----
+| Tool | Speed | Description |
+|------|-------|-------------|
+| `compliance_preflight` | fast | PASS/WARN/BLOCK verdict for any token |
+| `mica_status` | fast | MiCA authorization - ESMA register |
+| `peg_deviation` | fast | Real-time peg deviation |
+| `significant_issuer` | fast | Significant issuer threshold |
+| `interest_check` | fast | Interest prohibition scanner |
+| `evidence_profile` | med | 9-dimension risk scoring A-F |
+| `custody_risk` | med | SIFI status, concentration risk |
+| `market_liquidity` | med | DEX depth and exit channels |
+| `reserve_quality` | med | Reserve composition assessment |
+| `document_compliance` | med | Document completeness check |
+| `evidence_leaderboard` | med | 61 RWA protocols ranked |
+| `rlusd_integrity` | med | RLUSD attestation verification |
+| `macro_risk` | med | US macro risk composite |
+| `peg_history` | med | 30-day peg stability |
+| `ai_provenance` | med | Cryptographic provenance chain |
+| `ai_explain` | med | AI-powered grade explanation |
+| `ai_query` | med | Natural language evidence query |
+| `mica_market_overview` | heavy | Full MiCA market - 105 stablecoins |
+| `mica_full_pack` | heavy | Complete 12-article MiCA evidence |
+| `evidence_bundle` | heavy | Multi-framework evidence pack |
+| `generate_report` | heavy | Signed PDF, blockchain-anchored |
+| `kya_register` | fast | Register agent identity |
+| `kya_status` | fast | Check agent trust level |
+| `audit_log` | fast | Log decision to audit trail |
+| `audit_query` | med | Query audit trail history |
+| `audit_verify` | med | Verify trail integrity |
+| `ping` | fast | Connectivity test |
 
-## Transports
+</details>
 
-| Transport | URL |
-|-----------|-----|
-| Streamable HTTP | `https://feedoracle.io/mcp/` |
-| SSE (legacy) | `https://feedoracle.io/mcp/sse` |
-| Discovery | `https://feedoracle.io/mcp/.well-known/mcp/server.json` |
-| Evidence Stream | `https://feedoracle.io/evidence/stream` |
+<details>
+<summary>All 13 Stablecoin Risk tools</summary>
 
----
+`risk_assessment` Â· `peg_status` Â· `peg_history` Â· `supply_flow` Â· `holder_data` Â· `custody_data` Â· `redemption_data` Â· `cross_chain_data` Â· `leaderboard` Â· `compare` Â· `supported_tokens` Â· `methodology` Â· `ping`
 
-## Pricing
+Connect: `claude mcp add --transport sse feedoracle-risk https://feedoracle.io/mcp/risk/sse`
 
-Unit-based billing — pay for tool complexity, not raw calls.
+</details>
 
-| Tier | Price | Included | Overage |
-|------|-------|----------|---------|
-| **Free** | €0/mo | 300 units/day | Hard limit |
-| **Pro** | €49/mo | 15,000 units/mo | €0.005/unit |
-| **Agent** | €299/mo | 150,000 units/mo | €0.003/unit |
-| **Enterprise** | Custom | Unlimited | Negotiated |
+<details>
+<summary>All 13 Macro Intelligence tools</summary>
 
-Tool weights: Light (1 unit) · Medium (3 units) · Heavy (10 units). See [docs/BILLING.md](docs/BILLING.md) for full weight table.
+`economic_health` Â· `recession_risk` Â· `inflation_monitor` Â· `labor_market` Â· `gdp_tracker` Â· `fed_watch` Â· `yield_curve` Â· `defi_rates` Â· `consumer_sentiment` Â· `market_stress` Â· `safe_haven_flows` Â· `macro_regime` Â· `ping`
 
-Pricing page: [feedoracle.io/pricing.html](https://feedoracle.io/pricing.html)
-Weights API: `GET /api/billing/weights`
+Connect: `claude mcp add --transport sse feedoracle-macro https://feedoracle.io/mcp/macro/sse`
 
+</details>
 
-## Know Your Agent (KYA)
+## Why this is different
 
-Agent identity and trust scoring for autonomous AI systems. Agents register metadata (name, purpose, org, jurisdiction) and receive a trust score (0-100) that unlocks progressively more tools.
+| | Traditional | FeedOracle |
+|---|---|---|
+| **Evidence integrity** | PDF + email | Signed bundle + chain anchor |
+| **Timestamp proof** | File metadata | Blockchain-anchored (Polygon + XRPL) |
+| **Audit replay** | "We think this is what we had" | Deterministic replay from signed pack |
+| **Verification** | "Trust us" | Public key verification - zero trust |
+| **AI-native** | Manual API wrappers | 53 MCP tools, works out of the box |
 
-| Trust Level | Score | Access |
-|-------------|-------|--------|
-| UNVERIFIED | <25 | Light tools only |
-| KNOWN | 25-54 | + evidence packs, provenance |
-| TRUSTED | 55-79 | + generate_report |
-| CERTIFIED | 80+ | + guaranteed SLA |
+## Verify in 30 seconds
 
-MCP tools: `kya_register`, `kya_status`. See [docs/KYA.md](docs/KYA.md).
-
----
-
-## Audit Trail — Decision Logging
-
-Tamper-proof, chain-linked decision log for agent accountability. Every tool call is cached as evidence; agents log decisions referencing prior evidence via `request_id`. Chain integrity is SHA256-verified.
-
-```
-Agent calls peg_deviation (fo-abc123)
-Agent calls compliance_preflight (fo-def456)
-Agent decides: PASS
-Agent calls audit_log with evidence_request_ids: [fo-abc123, fo-def456]
-→ chain-linked entry with trail_id, evidence_hash, chain_hash
-```
-
-MCP tools: `audit_log` (3 units), `audit_query` (1 unit), `audit_verify` (1 unit). See [docs/AUDIT_TRAIL.md](docs/AUDIT_TRAIL.md).
-
----
-
-## The FeedOracle MCP Ecosystem
-
-| Server | URL | Purpose |
-|--------|-----|---------|
-| **Compliance Oracle** (this) | `https://feedoracle.io/mcp/` | MiCA/DORA regulatory data + AI Evidence Layer + Enterprise Trust Layer |
-| **Macro Oracle** | `https://feedoracle.io/mcp/macro/` | Fed/ECB economic indicators, 86 FRED + 20 ECB series, regime classification |
-| **Stablecoin Risk** | `https://feedoracle.io/mcp/risk/` | 7-signal stablecoin operational risk (SAFE/CAUTION/AVOID) |
-
-> "May your agent trade this?" → **Compliance Oracle**
-> "Should your agent trade right now?" → **Macro Oracle**
-> "Is this stablecoin safe for settlement?" → **Stablecoin Risk**
-
----
-
-## Verify in 30 Seconds
+No account needed. No trust required.
 
 ```bash
-# 1. Fetch evidence
+# 1. Get signed evidence
 curl -s -X POST https://feedoracle.io/ai/query \
   -H "Content-Type: application/json" \
   -d '{"question":"Is USDC MiCA compliant?"}'
 
-# 2. Verify JWS signature via JWKS
-curl https://feedoracle.io/.well-known/jwks.json
+# 2. Verify the signature
+curl -s https://feedoracle.io/.well-known/jwks.json
 
-# 3. Check Evidence Registry
-curl https://feedoracle.io/evidence/registry?limit=5
+# 3. Check the evidence registry
+curl -s https://feedoracle.io/evidence/registry?limit=3
 
-# 4. Replay for audit
-curl https://feedoracle.io/evidence/replay/FO-AIG-{pack_id}
-# → hash_match: true = deterministic proof
-
-# 5. SDK verification
-pip install feedoracle-verify
-python -c "from feedoracle_verify import verify_evidence; ..."
-
-# 6. Live Trust Proof Page
-open https://feedoracle.io/trust/
+# 4. Replay for audit proof
+curl -s https://feedoracle.io/evidence/replay/{pack_id}
 ```
+
+## Built for
+
+- **Banks and insurers** â€” MiCA + DORA compliance evidence
+- **Stablecoin issuers** â€” reserve and peg monitoring, signed proof
+- **AI agent builders** â€” 53 MCP tools, every decision auditable
+- **Compliance teams** â€” replace manual evidence with automated proof
+
+## Pricing
+
+| Tier | Calls/day | Price |
+|------|-----------|-------|
+| **Free** | 100 | $0 - no key needed |
+| **Pro** | 5,000 | $49/mo |
+| **Agent** | 25,000 | $299/mo |
+| **Enterprise** | Unlimited | [Contact us](mailto:enterprise@feedoracle.io) |
+
+## Links
+
+| | |
+|---|---|
+| Website | [feedoracle.io](https://feedoracle.io) |
+| Docs | [feedoracle.io/docs](https://feedoracle.io/docs.html) |
+| Trust | [feedoracle.io/trust](https://feedoracle.io/trust/) |
+| Uptime | [uptime.feedoracle.io](https://uptime.feedoracle.io) |
+| Health | [feedoracle.io/mcp/health](https://feedoracle.io/mcp/health) |
+| JWKS | [.well-known/jwks.json](https://feedoracle.io/.well-known/jwks.json) |
+| Contact | [enterprise@feedoracle.io](mailto:enterprise@feedoracle.io) |
 
 ---
 
-🌐 [feedoracle.io](https://feedoracle.io) · 📖 [Docs](https://feedoracle.io/docs) · 🏥 [Health](https://feedoracle.io/mcp/health) · 🛡️ [Trust](https://feedoracle.io/trust) · 📊 [Uptime](https://uptime.feedoracle.io)
+<div align="center">
 
-**License:** Proprietary — © 2026 FeedOracle.
+**FeedOracle turns compliance documents into compliance evidence.**
 
----
+*Evidence by Design.*
 
-## Setup
-
-1. Visit the [Anthropic MCP Directory](https://claude.com/connectors)
-2. Find **FeedOracle Compliance & Risk Intelligence** and click Connect
-3. Complete OAuth authentication (or use free tier without auth)
-4. Start querying — no configuration required
-
-**Direct connection (Claude Code):**
-```bash
-claude mcp add --transport http feedoracle https://mcp.feedoracle.io/mcp
-```
-
-**Claude Desktop** (`claude_desktop_config.json`):
-```json
-{
-  "mcpServers": {
-    "feedoracle": {
-      "url": "https://mcp.feedoracle.io/mcp"
-    }
-  }
-}
-```
-
----
-
-## Examples
-
-### Example 1: MiCA Compliance Check for a Stablecoin
-
-**User prompt:** "Is USDC compliant under EU MiCA regulation?"
-
-**Expected behavior:**
-- Calls `mica_status` with `token_symbol: "USDC"`
-- Returns authorization status (COMPLIANT/PENDING/NOT_AUTHORIZED), ESMA/EBA register cross-reference, applicable MiCA articles
-- Includes cryptographic evidence pack with JWS signature for audit trail
-
-**Example response summary:**
-```
-USDC — MiCA Status: COMPLIANT (Art. 48 EMT)
-Issuer: Circle Internet Financial
-ESMA Register: Verified
-Evidence Pack: FO-AIG-XXXX | Signed: ES256K
-```
-
----
-
-### Example 2: Stablecoin Risk Assessment Before Settlement
-
-**User prompt:** "Is USDT safe to use for DeFi settlement right now? Check peg stability and operational risk."
-
-**Expected behavior:**
-- Calls `peg_deviation` for real-time peg status
-- Calls `risk_assessment` from Stablecoin Risk MCP for 7-signal risk score
-- Returns SAFE/CAUTION/AVOID verdict with confidence score, peg deviation %, and risk breakdown
-
-**Example response summary:**
-```
-USDT Peg: 0.03% deviation — STABLE ✅
-Risk Score: 42/100 — CAUTION ⚠️
-Signals: Custody concentration HIGH, Redemption 24h OK, Cross-chain NORMAL
-Recommendation: Acceptable for settlement under 100k USD
-```
-
----
-
-### Example 3: Macro Regime Check for Trading Agent
-
-**User prompt:** "What is the current macro regime? Should my DeFi agent be risk-on or risk-off?"
-
-**Expected behavior:**
-- Calls `macro_regime` from Macro MCP (premium) or `market_stress` + `recession_risk` (free)
-- Returns RISK_ON/NEUTRAL/RISK_OFF/STRESS classification with 7 weighted signals
-- Includes Fed rate outlook, yield curve status, VIX, credit spreads
-
-**Example response summary:**
-```
-Macro Regime: RISK_OFF (confidence: 0.78)
-Risk Score: 67/100
-Signals: Yield curve INVERTED, VIX ELEVATED, Credit spreads WIDE
-Fed: HOLD — next FOMC: 2026-03-19
-Recommendation: Reduce DeFi exposure, favor stablecoins
-```
-
----
-
-### Example 4: Full DORA Compliance Evidence for a Protocol
-
-**User prompt:** "Generate a DORA compliance evidence report for Aave. I need it for our regulatory audit next week."
-
-**Expected behavior:**
-- Calls `evidence_bundle` with framework DORA
-- Calls `generate_report` (API key required) to produce signed PDF
-- PDF is XRPL-anchored with deterministic replay proof
-- Returns download link + Evidence Registry entry
-
-**Example response summary:**
-```
-DORA Evidence Pack: Aave
-Art. 28 (ICT Third Party): 3 custodians identified, concentration risk: LOW
-Art. 30 (Contractual arrangements): 2/3 verified
-PDF Report: Signed (ES256K), XRPL anchor: rXXX...
-Registry Entry: FO-DORA-AAVE-20260313
-Replay URL: /evidence/replay/FO-DORA-AAVE-20260313
-```
-
----
-
-## Authentication
-
-This server supports OAuth 2.0 (Authorization Code + PKCE) for user-facing flows and `client_credentials` for autonomous agent-to-agent authentication.
-
-- **Free tier:** No authentication required (20 calls/day anonymous, 100/day with free key)
-- **OAuth Discovery:** `https://mcp.feedoracle.io/.well-known/oauth-authorization-server`
-- **Scopes:** `mcp:read`, `mcp:compliance:read`, `mcp:risk:read`, `mcp:macro:read`, `mcp:verified-reports:read`
-
-For testing accounts or enterprise evaluation access, contact: [mcp@feedoracle.io](mailto:mcp@feedoracle.io)
-
----
-
-## Privacy Policy
-
-FeedOracle collects minimal data necessary to operate the service.
-
-**Data collected:**
-- OAuth tokens (stored encrypted, auto-expire after 1 hour)
-- API usage metrics (call count, tool name, timestamp) — no query content stored
-- Evidence packs (compliance evidence only — no personal data)
-
-**Data NOT collected:**
-- User query content is not stored or logged
-- No personal identifiers beyond email (optional, for paid accounts)
-- No data sold or shared with third parties
-
-**Data retention:** Usage metrics retained 90 days. Evidence registry entries retained indefinitely (compliance audit requirement).
-
-**Full Privacy Policy:** [feedoracle.io/privacy](https://feedoracle.io/privacy)
-
-**GDPR:** FeedOracle is operated from Germany. Data processed under GDPR Art. 6(1)(b) — contract performance.
-
----
-
-## Support
-
-- **Email:** [mcp@feedoracle.io](mailto:mcp@feedoracle.io)
-- **Documentation:** [feedoracle.io/docs](https://feedoracle.io/docs)
-- **Status / Uptime:** [uptime.feedoracle.io](https://uptime.feedoracle.io)
-- **Issues:** [feedoracle.io/support](https://feedoracle.io/support)
+</div>
