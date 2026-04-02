@@ -1,17 +1,18 @@
 <div align="center">
 
-# FeedOracle MCP Server
+# FeedOracle — DORA Operating System
 
-**Compliance evidence infrastructure for AI agents.**
+**The first compliance operating system for DORA, MiCA & AMLR.**
 
-Every response cryptographically signed. Every decision audit-ready.
+Continuous monitoring. Signed evidence. Audit-ready reports.
 
 [![Server Status](https://img.shields.io/badge/server-live-10B898?style=flat-square)](https://feedoracle.io/mcp/health)
-[![Tools](https://img.shields.io/badge/MCP_tools-53-3B82F6?style=flat-square)](https://feedoracle.io/mcp.html)
-[![Stablecoins](https://img.shields.io/badge/stablecoins-105+-8A9DB4?style=flat-square)](https://feedoracle.io)
+[![MCP Servers](https://img.shields.io/badge/MCP_servers-11-3B82F6?style=flat-square)](https://feedoracle.io/mcp.html)
+[![Tools](https://img.shields.io/badge/tools-203-3B82F6?style=flat-square)](https://feedoracle.io/mcp.html)
+[![DORA Articles](https://img.shields.io/badge/DORA_articles-26/26-10B898?style=flat-square)](https://feedoracle.io/dora/)
 [![Free Tier](https://img.shields.io/badge/free_tier-100_calls%2Fday-10B898?style=flat-square)](https://feedoracle.io/pricing.html)
 
-[Website](https://feedoracle.io) Â· [Docs](https://feedoracle.io/docs.html) Â· [MCP Tools](https://feedoracle.io/mcp.html) Â· [Trust Policy](https://feedoracle.io/trust/) Â· [Pricing](https://feedoracle.io/pricing.html)
+[Website](https://feedoracle.io) · [DORA OS](https://feedoracle.io/dora/) · [Dashboard](https://feedoracle.io/ampel/) · [Docs](https://feedoracle.io/docs.html) · [Trust](https://feedoracle.io/trust/) · [Pricing](https://feedoracle.io/pricing.html)
 
 </div>
 
@@ -19,30 +20,28 @@ Every response cryptographically signed. Every decision audit-ready.
 
 ## The problem
 
-AI agents make compliance decisions every day. But nobody can prove what data they used, when they used it, or whether it was tampered with.
+DORA and MiCA require **continuous proof** — not one-time documentation. But most compliance teams still prepare evidence manually before each audit: spreadsheets, email chains, unsigned PDFs, unclear timestamps.
 
-Regulators don't accept "trust me." They require **verifiable evidence**.
+When the regulator asks "Can you prove this?", the answer is silence.
 
 ## What FeedOracle does
 
-FeedOracle is the **evidence layer** for AI compliance decisions. Connect your agent via MCP. Get signed evidence back.
+FeedOracle is the **operating layer** for regulatory compliance. It continuously monitors your DORA and MiCA obligations, generates cryptographically signed evidence, and delivers audit-ready reports — before the regulator asks.
 
 ```
-Your AI agent                    FeedOracle                     Regulator
-     |                               |                              |
-     |-- "Is USDC MiCA compliant?" -->|                              |
-     |                               |-- Fetch from 7+ sources      |
-     |                               |-- Structure evidence          |
-     |                               |-- Sign (ECDSA ES256K)         |
-     |                               |-- Anchor (Polygon + XRPL)    |
-     |<-- Signed evidence pack ------|                              |
-     |                               |                              |
-     |    6 months later...          |                              |
-     |                               |                              |
-     |-- "Show proof" -------------------------------------------- >|
-     |                               |<-- Replay from registry -----|
-     |                               |-- hash_match: true --------->|
-     |                               |         Audit passed         |
+Compliance Team              FeedOracle DORA OS              Regulator
+      |                            |                              |
+      |-- Entity anlegen --------->|                              |
+      |                            |-- 39 automated checks/day    |
+      |                            |-- Sign every finding (ES256K)|
+      |                            |-- Anchor on-chain            |
+      |<-- Dashboard: 97% GREEN --|                              |
+      |                            |                              |
+      |    Audit day...            |                              |
+      |                            |                              |
+      |-- "Generate Report" ------>|                              |
+      |<-- Signed PDF + evidence --|-- Verify independently ----->|
+      |                            |         Audit passed         |
 ```
 
 ## Quick start
@@ -54,7 +53,7 @@ claude mcp add --transport http feedoracle https://feedoracle.io/mcp/
 ```
 
 <details>
-<summary>Claude Desktop / Cursor / Windsurf</summary>
+<summary>Claude Desktop / Cursor / Windsurf config</summary>
 
 ```json
 {
@@ -68,105 +67,66 @@ claude mcp add --transport http feedoracle https://feedoracle.io/mcp/
 
 </details>
 
-Then ask Claude:
+Then ask:
 
 ```
 Is USDC compliant for trading in the EU under MiCA?
+What is our DORA readiness score?
+Generate a board report for our entity.
 ```
 
-You get back signed, verifiable, audit-ready evidence:
-
-```json
-{
-  "decision": "PASS",
-  "confidence": 0.95,
-  "evidence": {
-    "mica": { "status": "compliant", "issuer": "Circle" },
-    "grade": "A",
-    "pack_id": "FO-AIG-A8C3D2"
-  },
-  "signature": {
-    "alg": "ES256K",
-    "independently_verifiable": true,
-    "verify": "https://feedoracle.io/.well-known/jwks.json"
-  }
-}
-```
-
-## 3 MCP servers Â· 53 tools
+## 11 MCP servers · 203 tools
 
 | Server | Tools | Purpose |
 |--------|-------|---------|
-| **Compliance Oracle** | 27 | MiCA status, evidence packs, DORA artifacts, audit trail |
-| **Stablecoin Risk** | 13 | 7-signal risk scoring, peg monitoring, 105+ tokens |
-| **Macro Intelligence** | 13 | 86 FRED + 20 ECB indicators, regime classification |
+| **Compliance Oracle** | 33 | MiCA preflight, evidence packs, DORA artifacts, audit trail, AI queries |
+| **DORA Ampel** | 46 | All 26 articles, traffic-light scoring, finding lifecycle, board reports |
+| **MiCA Ampel** | 24 | Stablecoin authorization, peg monitoring, whitepaper validation |
+| **AML Oracle** | 12 | Sanctions screening (EU+OFAC+UN), PEP checks, adverse media |
+| **AgentGuard** | 20 | AI agent governance: pre-checks, output scanning, kill-switch |
+| **Research Oracle** | 11 | Semantic Scholar, arXiv, regulatory research |
+| **EULaw Oracle** | 8 | EU regulatory text search and analysis |
+| **RegWatch Oracle** | 6 | Regulatory change monitoring |
+| **ESMA Oracle** | 8 | ESMA register queries, MiCA authorization lookup |
+| **Macro Oracle** | 22 | 86 FRED + ECB indicators, regime classification, yield curve |
+| **Risk Oracle** | 13 | 7-signal stablecoin risk scoring, 105+ tokens |
 
-> **"May your agent trade this?"** â†’ Compliance Oracle
-> **"Should your agent trade now?"** â†’ Macro Intelligence  
-> **"Is this stablecoin safe?"** â†’ Stablecoin Risk
+### The closed loop
 
-<details>
-<summary>All 27 Compliance tools</summary>
+Every compliance check follows one path:
 
-| Tool | Speed | Description |
-|------|-------|-------------|
-| `compliance_preflight` | fast | PASS/WARN/BLOCK verdict for any token |
-| `mica_status` | fast | MiCA authorization - ESMA register |
-| `peg_deviation` | fast | Real-time peg deviation |
-| `significant_issuer` | fast | Significant issuer threshold |
-| `interest_check` | fast | Interest prohibition scanner |
-| `evidence_profile` | med | 9-dimension risk scoring A-F |
-| `custody_risk` | med | SIFI status, concentration risk |
-| `market_liquidity` | med | DEX depth and exit channels |
-| `reserve_quality` | med | Reserve composition assessment |
-| `document_compliance` | med | Document completeness check |
-| `evidence_leaderboard` | med | 61 RWA protocols ranked |
-| `rlusd_integrity` | med | RLUSD attestation verification |
-| `macro_risk` | med | US macro risk composite |
-| `peg_history` | med | 30-day peg stability |
-| `ai_provenance` | med | Cryptographic provenance chain |
-| `ai_explain` | med | AI-powered grade explanation |
-| `ai_query` | med | Natural language evidence query |
-| `mica_market_overview` | heavy | Full MiCA market - 105 stablecoins |
-| `mica_full_pack` | heavy | Complete 12-article MiCA evidence |
-| `evidence_bundle` | heavy | Multi-framework evidence pack |
-| `generate_report` | heavy | Signed PDF, blockchain-anchored |
-| `kya_register` | fast | Register agent identity |
-| `kya_status` | fast | Check agent trust level |
-| `audit_log` | fast | Log decision to audit trail |
-| `audit_query` | med | Query audit trail history |
-| `audit_verify` | med | Verify trail integrity |
-| `ping` | fast | Connectivity test |
+```
+Check → Evidence → Finding → Owner → Remediation → Re-Test → Closure → Signed Report
+```
 
-</details>
+Automated daily via 5-stage cron pipeline. SHA-256 audit chain. 3-level escalation (Owner → CISO → Board).
 
-<details>
-<summary>All 13 Stablecoin Risk tools</summary>
+## DORA OS — 6 layers, full coverage
 
-`risk_assessment` Â· `peg_status` Â· `peg_history` Â· `supply_flow` Â· `holder_data` Â· `custody_data` Â· `redemption_data` Â· `cross_chain_data` Â· `leaderboard` Â· `compare` Â· `supported_tokens` Â· `methodology` Â· `ping`
+| Layer | What it covers | Articles |
+|-------|---------------|----------|
+| **Governance & Reporting** | Board packs, KPIs, framework review, annual review | Art. 5–6 |
+| **Resilience & Recovery** | BIA, RTO/RPO, DR tests, crisis plans, scenarios | Art. 11–12 |
+| **Asset & Dependency Mapping** | Asset inventory, blast radius, SPOF, impact simulation | Art. 8 |
+| **Register & Contracts** | Register of Information, 15 Art. 30 clauses, exit plans | Art. 28–30 |
+| **Third-Party Risk & AML** | Provider risk, sanctions, PEP, KYC, NatCat, GLEIF | Art. 28–44 |
+| **Threat Intel & Incident** | CVE/KEV, CERT-Bund, MITRE ATT&CK, incident timeline | Art. 6–27 |
 
-Connect: `claude mcp add --transport sse feedoracle-risk https://feedoracle.io/mcp/risk/sse`
+> Most compliance tools cover only the bottom layer (threat intel). DORA demands operational proof across all 6 layers — from CVE patches to board-level governance reports.
 
-</details>
+## What makes this different
 
-<details>
-<summary>All 13 Macro Intelligence tools</summary>
-
-`economic_health` Â· `recession_risk` Â· `inflation_monitor` Â· `labor_market` Â· `gdp_tracker` Â· `fed_watch` Â· `yield_curve` Â· `defi_rates` Â· `consumer_sentiment` Â· `market_stress` Â· `safe_haven_flows` Â· `macro_regime` Â· `ping`
-
-Connect: `claude mcp add --transport sse feedoracle-macro https://feedoracle.io/mcp/macro/sse`
-
-</details>
-
-## Why this is different
-
-| | Traditional | FeedOracle |
+| | Traditional compliance | FeedOracle DORA OS |
 |---|---|---|
-| **Evidence integrity** | PDF + email | Signed bundle + chain anchor |
-| **Timestamp proof** | File metadata | Blockchain-anchored (Polygon + XRPL) |
-| **Audit replay** | "We think this is what we had" | Deterministic replay from signed pack |
-| **Verification** | "Trust us" | Public key verification - zero trust |
-| **AI-native** | Manual API wrappers | 53 MCP tools, works out of the box |
+| **Approach** | Checklists & templates | Closed-loop automation |
+| **Evidence signing** | None | ES256K on every artifact |
+| **On-chain anchoring** | None | Polygon + XRPL |
+| **AI agent integration** | None | 203 MCP tools, Claude/Cursor native |
+| **Automated escalation** | Manual workflows | 3-level auto (Owner → CISO → Board) |
+| **Cross-regulation** | DORA only | DORA + MiCA + AMLR simultaneous |
+| **BaFin incident reporting** | Templates | ITS 2024/1772 draft + 4-eyes approval |
+| **Self-service trial** | "Book a demo" | 5 min, no login, instant score |
+| **Pricing** | €1,500–25,000/mo | Free tier · Starter €49/mo |
 
 ## Verify in 30 seconds
 
@@ -181,47 +141,42 @@ curl -s -X POST https://feedoracle.io/ai/query \
 # 2. Verify the signature
 curl -s https://feedoracle.io/.well-known/jwks.json
 
-# 3. Check the evidence registry
-curl -s https://feedoracle.io/evidence/registry?limit=3
-
-# 4. Replay for audit proof
-curl -s https://feedoracle.io/evidence/replay/{pack_id}
+# 3. Check on-chain proof
+curl -s https://feedoracle.io/proof/
 ```
-
-## Built for
-
-- **Banks and insurers** â€” MiCA + DORA compliance evidence
-- **Stablecoin issuers** â€” reserve and peg monitoring, signed proof
-- **AI agent builders** â€” 53 MCP tools, every decision auditable
-- **Compliance teams** â€” replace manual evidence with automated proof
 
 ## Pricing
 
-| Tier | Calls/day | Price |
-|------|-----------|-------|
-| **Free** | 100 | $0 - no key needed |
-| **Pro** | 5,000 | $49/mo |
-| **Agent** | 25,000 | $299/mo |
-| **Enterprise** | Unlimited | [Contact us](mailto:enterprise@feedoracle.io) |
+| Tier | Price | Best for |
+|------|-------|----------|
+| **Free** | €0 | First DORA assessment — 100 calls/day, no key needed |
+| **Starter** | €49/mo | Evaluation — all tools, signed evidence |
+| **Growth** | €199/mo | Production — PDF reports, webhooks |
+| **Pro** | €499/mo | Compliance teams — MiCA + DORA + AI queries |
+| **Enterprise** | €1,499/mo | Regulated institutions — dedicated infra, SLA, SEPA |
 
 ## Links
 
 | | |
 |---|---|
 | Website | [feedoracle.io](https://feedoracle.io) |
-| Docs | [feedoracle.io/docs](https://feedoracle.io/docs.html) |
+| DORA OS | [feedoracle.io/dora](https://feedoracle.io/dora/) |
+| Dashboard | [feedoracle.io/ampel](https://feedoracle.io/ampel/) |
 | Trust | [feedoracle.io/trust](https://feedoracle.io/trust/) |
+| Docs | [feedoracle.io/docs](https://feedoracle.io/docs.html) |
 | Uptime | [uptime.feedoracle.io](https://uptime.feedoracle.io) |
 | Health | [feedoracle.io/mcp/health](https://feedoracle.io/mcp/health) |
 | JWKS | [.well-known/jwks.json](https://feedoracle.io/.well-known/jwks.json) |
-| Contact | [enterprise@feedoracle.io](mailto:enterprise@feedoracle.io) |
+| On-chain proof | [feedoracle.io/proof](https://feedoracle.io/proof/) |
 
 ---
 
 <div align="center">
 
-**FeedOracle turns compliance documents into compliance evidence.**
+**DORA deadline: July 2026. MiCA is already in force.**
 
 *Evidence by Design.*
+
+🇩🇪 Built in Germany · 🔐 ES256K signed · ⛓️ Polygon + XRPL anchored · 📄 BaFin-ready
 
 </div>
