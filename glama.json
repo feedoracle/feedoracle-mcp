@@ -1,11 +1,6 @@
 {
-  "name": "FeedOracle MCP",
-  "description": "Compliance evidence infrastructure for regulated tokenized markets. 33 tools: MiCA preflight (PASS/WARN/BLOCK), ZK-solvency proofs, gold/metals evidence (ES256K), peg monitoring, reserve quality, DORA, audit trail. July 2026 MiCA deadline.",
-  "version": "2.5.0",
-  "author": "FeedOracle",
-  "homepage": "https://feedoracle.io",
-  "repository": "https://github.com/feedoracle/feedoracle-mcp",
-  "license": "MIT",
-  "tags": ["mica","compliance","stablecoin","rwa","zk-proof","evidence","es256k","mcp","regulation","dora"],
-  "mcp": {"transport": "streamable-http", "endpoint": "https://mcp.feedoracle.io/mcp"}
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": [
+    "feedoracle"
+  ]
 }
