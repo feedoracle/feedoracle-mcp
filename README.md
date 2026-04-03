@@ -8,7 +8,7 @@ Continuous monitoring. Signed evidence. Audit-ready reports.
 
 [![Server Status](https://img.shields.io/badge/server-live-10B898?style=flat-square)](https://feedoracle.io/mcp/health)
 [![MCP Servers](https://img.shields.io/badge/MCP_servers-11-3B82F6?style=flat-square)](https://feedoracle.io/mcp.html)
-[![Tools](https://img.shields.io/badge/tools-203-3B82F6?style=flat-square)](https://feedoracle.io/mcp.html)
+[![Tools](https://img.shields.io/badge/tools-50-3B82F6?style=flat-square)](https://feedoracle.io/mcp.html)
 [![DORA Articles](https://img.shields.io/badge/DORA_articles-26/26-10B898?style=flat-square)](https://feedoracle.io/dora/)
 [![Free Tier](https://img.shields.io/badge/free_tier-100_calls%2Fday-10B898?style=flat-square)](https://feedoracle.io/pricing.html)
 
@@ -75,7 +75,7 @@ What is our DORA readiness score?
 Generate a board report for our entity.
 ```
 
-## 11 MCP servers · 203 tools
+## 11 MCP servers · 50 tools (main server)
 
 | Server | Tools | Purpose |
 |--------|-------|---------|
@@ -90,6 +90,10 @@ Generate a board report for our entity.
 | **ESMA Oracle** | 8 | ESMA register queries, MiCA authorization lookup |
 | **Macro Oracle** | 22 | 86 FRED + ECB indicators, regime classification, yield curve |
 | **Risk Oracle** | 13 | 7-signal stablecoin risk scoring, 105+ tokens |
+| **Governance** | 3 | policy_explain, price_quote, agent_reputation_score |
+| **DetectiveOracle** | 5 | Fraud detection, anomaly analysis, case management |
+| **SupportOracle** | 8 | Auto-diagnostics, health checks, onboarding, tickets |
+| **Trust Passport** | 1 | Signed agent trust document |
 
 ### The closed loop
 
@@ -113,6 +117,25 @@ Automated daily via 5-stage cron pipeline. SHA-256 audit chain. 3-level escalati
 | **Threat Intel & Incident** | CVE/KEV, CERT-Bund, MITRE ATT&CK, incident timeline | Art. 6–27 |
 
 > Most compliance tools cover only the bottom layer (threat intel). DORA demands operational proof across all 6 layers — from CVE patches to board-level governance reports.
+
+
+## Agent Trust Runtime
+
+Complete trust infrastructure for autonomous agents:
+
+| Layer | What it does | Tools |
+|-------|-------------|-------|
+| **AgentGuard** | Identity (KYA), policy enforcement, kill-switch | 20 |
+| **DetectiveOracle** | Fraud scoring, anomaly detection, case management | 5 |
+| **SupportOracle** | Self-healing diagnostics, onboarding, ticket system | 8 |
+| **Governance** | Policy explain, pricing, reputation scoring | 3 |
+| **Trust Passport** | Signed agent reputation document | 1 |
+
+Agent lifecycle — no human needed:
+
+```
+Register → Preflight → Execute → Prove → Rate → Monitor → Support → Passport
+```
 
 ## What makes this different
 
