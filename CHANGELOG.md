@@ -1,79 +1,72 @@
 # Changelog
 
-## v4.0 — 2026-03-13
+## v6.0.0 — OracleNet Execute Pipeline (2026-04-07)
 
-### Unit-Based Billing
-- Stripe Billing Meter for automated overage charging (Pro/Agent tiers)
-- 27 MCP tools + internal system tools classified by weight: Light (1 unit), Medium (3 units), Heavy (10 units)
-- Free tier: 300 units/day hard limit
-- Pro tier: 15,000 units/month included, €0.005/unit overage
-- Agent tier: 150,000 units/month included, €0.003/unit overage
-- `meta.units_consumed` in every tool response
-- `/api/billing/weights` public endpoint
-- Pricing page updated to unit-based model
+### Execute Pipeline
+- `quantum_ask`: Natural language → intent → route → execute → deliver → learn
+- `quantum_execute`: Direct tool execution with neural learning
+- MCP session handshake + SSE parsing for all oracle types
+- Auto-settlement with SHA-256 content hash
 
-### Know Your Agent (KYA)
-- Agent identity registration with trust scoring (0-100, 6 dimensions)
-- 4 trust levels: UNVERIFIED, KNOWN, TRUSTED, CERTIFIED
-- Trust-gated access to 6 sensitive tools
-- New MCP tools: `kya_register`, `kya_status`
-- 5 REST endpoints: register, profile, check, summary, agents
-- KYA profiles linked to OAuth client identities
+### Scale
+- 90 MCP oracles (was 11), 1,014 capabilities (was 50)
+- 7 categories: Compliance, Trust, Finance, Business, Travel, Blockchain, Payment
+- 13 blockchain chains: BTC, ETH, XRPL, SOL, ARB, TON, SUI, Hedera, Base, BNB, XLM, Aptos, Flare
+- Enterprise suite: CFO, HR, Health, SupplyChain, CyberShield, LegalTech, Tax, CBDC, PSD2
 
-### Audit Trail
-- Tamper-proof, SHA256 chain-linked decision logging
-- Automatic evidence capture from all tool responses
-- Decision entries reference prior tool calls via `request_id`
-- Chain integrity verification (detects any tampering)
-- New MCP tools: `audit_log`, `audit_query`, `audit_verify`
-- 4 REST endpoints: trail, verify, entry, stats
-- Evidence snapshots preserved for regulatory replay
+### Neural Layer
+- Synapse logging on every execution
+- Auto-reward based on success + response time
+- Routing weights used for oracle selection
+- 96 synapses, 69 weights across 38 oracles
 
-### Evidence Trust Policy
-- Formal Trust Policy v1.0 (13 sections)
-- Evidence lifecycle states: CURRENT, STALE, CORRECTED, SUPERSEDED, DISPUTED, RETRACTED
-- Dispute-SLA: acknowledge 4h, classify 24h, resolve 5 business days
-- Liability boundary with explicit downstream agentic execution clause
-- Lifecycle transition authority matrix (who may trigger each state change)
-- Human-readable `summary` field in every MCP tool response
-- Evidence artifact auto-registration with state tracking
-- 7 reference workflows + 1 failure-path workflow
+### On-Chain
+- 104 escrow deals on Base Mainnet (103 settled)
+- First autonomous deal through execute pipeline (Deal #103)
+- Contract: 0x330F99f34246EA375333b9C01Ed6BB49190B051F
 
-### Infrastructure
-- New DB tables: `kya_profiles`, `kya_events`, `audit_decisions`, `audit_evidence_cache`, `evidence_artifacts`, `evidence_state_log`, `stripe_customers`
-- `usage_log` table extended with `units` column (backfilled)
-- New modules: `kya.py`, `audit_trail.py`, `evidence_lifecycle.py`
-- Stripe objects: 1 Billing Meter, 2 Metered Prices
-- Total MCP tools: 27 (was 22)
-- Anthropic MCP Directory submission (Anthropic crawling confirmed)
+### Hardening
+- Idempotency (request-hash dedup, 5 min TTL)
+- Circuit breaker (3 failures → open → 120s cooldown)
+- Rate limiting (30/min per caller)
+- Replay protection (5 min timestamp window)
+- Malformed response guard (1MB, type validation)
+- Webhook limits (50 global, 5 per DID)
+- Escrow settlement: service-key + 1 USDC cap
 
----
+### Observability
+- Soak test: 12 queries, 6 categories, every 5 min (12/12 pass, 88ms avg)
+- Cockpit: oracle health, neural weights, security, soak trends
+- All OracleNet DBs in daily backup
 
-## v3.1 — 2026-03-08
+### Fixes
+- Immune System IntegrityError fixed
+- Self-Evolution Telegram approval (/proposals, /approve, /reject)
+- AgentGuard false positives rehabilitated
+- Catalog categories populated
+- Nginx security headers (HSTS, X-Frame, XSS)
 
-### Enterprise Trust Layer
-- JWS signing (ES256K, RFC 7515)
-- Versioned schemas (v2.3)
+## v5.1.0 — DetectiveOracle + SupportOracle (2026-04-03)
+- 50 tools on main server
+- DetectiveOracle (fraud detection)
+- SupportOracle (diagnostics, onboarding)
+- Trust Passport (signed agent document)
+- Governance tools
+
+## v5.0.0 — DORA OS Positioning (2026-04-02)
+- 11 MCP servers, 203 tools total
+- DORA Operating System framing
+- Updated pricing tiers
+
+## v4.0.0 — Billing + KYA + Audit Trail (2026-03-13)
+- Unit-based billing (Stripe Billing Meter)
+- Know Your Agent (KYA) registration
+- Tamper-proof audit trail (SHA-256 chain)
+- Evidence Trust Policy v1.0
+- 27 MCP tools
+
+## v3.1 — Enterprise Trust Layer (2026-03-08)
+- JWS signing (ES256K)
+- Versioned schemas
 - Evidence registry
-- SLA layer with freshness targets
-- Agent trust management
-- Streaming evidence (SSE)
-- Deterministic replay
-- Zero-trust validation SDK
-
-### OAuth 2.0
-- Dynamic Client Registration (RFC 7591)
-- PKCE (RFC 7636)
-- Token refresh/rotation
-- Token revocation (RFC 7009)
-- Client credentials grant for M2M agents
-- Claude Marketplace compatibility
-
----
-
-## v2.3.1 — 2026-02-21
-
-- 22 MCP tools
-- AI Evidence Layer (ai_query, evidence_bundle, ai_explain, ai_provenance)
-- Unified response schema v2.3
-- MiCA article mapping for all tools
+- SLA layer

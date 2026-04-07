@@ -1,7 +1,7 @@
 {
   "name": "feedoracle-mcp",
-  "version": "4.2.0",
-  "description": "FeedOracle Compliance MCP Server — Evidence infrastructure for AI agents",
+  "version": "6.0.0",
+  "description": "FeedOracle Compliance Evidence Infrastructure \u2014 90 MCP oracles, 1,014 tools, execute pipeline, neural routing, on-chain settlement",
   "type": "module",
   "main": "server.mjs",
   "scripts": {
