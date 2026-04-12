@@ -4,11 +4,11 @@
 
 **Signed evidence for every AI compliance decision. MiCA · DORA · AMLR.**
 
-90 MCP oracles · 1,014 tools · Execute pipeline · Neural routing · On-chain proof
+102 MCP oracles · 1,235 tools · Execute pipeline · Neural routing · On-chain proof
 
 [![Server Status](https://img.shields.io/badge/server-live-10B898?style=flat-square)](https://feedoracle.io/mcp/health)
-[![Oracles](https://img.shields.io/badge/oracles-90-3B82F6?style=flat-square)](https://tooloracle.io/oraclenet/cockpit.json)
-[![Tools](https://img.shields.io/badge/tools-1%2C014-3B82F6?style=flat-square)](https://tooloracle.io/assets/catalog.json)
+[![Oracles](https://img.shields.io/badge/oracles-102-3B82F6?style=flat-square)](https://tooloracle.io/oraclenet/cockpit.json)
+[![Tools](https://img.shields.io/badge/tools-1%2C235-3B82F6?style=flat-square)](https://tooloracle.io/assets/catalog.json)
 [![Soak Test](https://img.shields.io/badge/soak_test-12%2F12-10B898?style=flat-square)](https://tooloracle.io/oraclenet/soak.json)
 [![Free Tier](https://img.shields.io/badge/free_tier-100_calls%2Fday-10B898?style=flat-square)](https://feedoracle.io/pricing.html)
 
@@ -20,13 +20,13 @@
 
 ## What changed in v6.0
 
-FeedOracle is no longer just a compliance server. It's now the compliance layer within **OracleNet** — an autonomous mesh of 90 specialized oracles that understand, execute, prove, and learn.
+FeedOracle is no longer just a compliance server. It's now the compliance layer within **OracleNet** — an autonomous mesh of 102 specialized oracles that understand, execute, prove, and learn.
 
 **New in v6.0:**
 - **Execute Pipeline**: `quantum_ask` takes a natural language question, routes it to the right oracle, executes the call, and returns a signed result with content hash — one call
 - **Neural Learning**: Every execution is logged as a synapse. Routing weights update automatically. Better oracles get preferred.
 - **On-Chain Settlement**: 104 deals settled on Base Mainnet via escrow smart contract
-- **90 Oracles**: From 11 servers to 90, covering compliance, blockchain (13 chains), finance, business, payments, and more
+- **90 Oracles**: From 11 servers to 102, covering compliance, blockchain (13 chains), finance, business, payments, and more
 - **Hardening**: Idempotency, circuit breaker, rate limiting, replay protection
 - **Soak Testing**: 12 queries across 6 categories, running every 5 minutes, 24/7
 
@@ -131,6 +131,29 @@ curl -s https://tooloracle.io/oraclenet/cockpit.json
 | **Growth** | €199/mo | PDF reports, webhooks |
 | **Pro** | €499/mo | MiCA + DORA + AI queries |
 | **Enterprise** | €1,499/mo | Dedicated infra, SLA, SEPA |
+
+## x402 — AI Agent Micropayments (USDC on Base)
+
+AI agents can pay per tool call automatically via the x402 protocol. No API key, no signup, no subscription.
+
+```bash
+# Agent calls any tool → gets HTTP 402 with payment requirements
+curl https://tooloracle.io/x402/rank/mcp/ \
+  -X POST -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"check_ranking","arguments":{"domain":"example.com"}},"id":1}'
+
+# Agent sends USDC on Base, retries with tx hash → tool executes
+# Pricing: $0.01-$0.15 per call depending on tool complexity
+```
+
+| | |
+|---|---|
+| Gateway | [tooloracle.io/x402/](https://tooloracle.io/x402/) |
+| Wallet | `0x4a4B1F45a00892542ac62562D1F2C62F579E4945` |
+| Network | Base Mainnet (USDC) |
+| Products | 35 |
+| Tools | 254 |
+| Discovery | [.well-known/x402](https://tooloracle.io/.well-known/x402) |
 
 ## Links
 
