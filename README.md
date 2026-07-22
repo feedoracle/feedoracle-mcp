@@ -10,7 +10,7 @@
 [![Soak Test](https://img.shields.io/badge/soak_test-12%2F12-10B898?style=flat-square)](https://tooloracle.io/oraclenet/soak.json)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square)](LICENSE)
 
-*Metrics as of 2026-07-22 — figures are live-sourced from [feedoracle-metrics.json](https://feedoracle.io/data/feedoracle-metrics.json), not hardcoded*
+*Figures below were verified against the canonical metrics source on 2026-07-22: [feedoracle-metrics.json](https://feedoracle.io/data/feedoracle-metrics.json)*
 
 [Website](https://feedoracle.io) · [Docs](https://feedoracle.io/docs.html) · [Trust](https://feedoracle.io/trust/) · [Pricing](https://feedoracle.io/pricing.html)
 
@@ -112,7 +112,7 @@ FeedOracle's own primary oracles (verified against [live metrics](https://feedor
 
 | Server | Tools | Scope |
 |---|---|---|
-| AmpelOracle | 50 | DORA — all articles, traffic-light scoring, board reports |
+| AmpelOracle | 50 | DORA — 26 tracked control areas, traffic-light scoring, board reports |
 | MiCAOracle | 24 | MiCA stablecoin authorization, peg, reserves |
 | FeedOracle Compliance | 29 | Unified preflight, evidence packs, audit trail |
 | ReserveOracle | 11 | MiCA Art. 36 reserve quality, attestation verification |
@@ -133,7 +133,7 @@ Beyond these 6 FeedOracle-branded servers (149 tools), FeedOracle also draws on 
 
 ## Evidence & trust model
 
-Every paid tool response includes a signed evidence object: source, timestamp, confidence, and a content hash you can verify independently.
+Supported evidence responses include signed receipt fields — source, timestamp, confidence, and a content hash. Verify the signature and anchor fields returned by each individual tool response rather than assuming a fixed set applies to every tool; not all tools are evidence-bearing in the same way (e.g. `ping` returns a lighter operational receipt).
 
 ```bash
 curl -s https://feedoracle.io/.well-known/jwks.json   # public keys to verify signatures
@@ -169,8 +169,8 @@ MIT — see [LICENSE](LICENSE).
 
 <div align="center">
 
-DORA has applied since 17 January 2025. MiCA is in force, with transition periods for certain CASPs running through 2026.
+DORA has applied since 17 January 2025. MiCA is fully applicable; the EU-wide CASP transitional period ended no later than 1 July 2026.
 
-🇩🇪 Built in Germany · 🔐 Signed evidence · ⛓️ On-chain anchored
+🇩🇪 Built in Germany · 🔐 Signed evidence · 🧾 Verifiable receipts
 
 </div>

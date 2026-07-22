@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "name": "FeedOracle DORA OS",
-  "description": "Compliance evidence infrastructure for regulated entities and their AI agents. MiCA stablecoin authorization, DORA operational resilience (all articles), AMLR/sanctions screening, and reserve/risk scoring across 6 FeedOracle-branded oracles. Also draws on a larger shared compliance-infrastructure mesh (OracleNet) for extended coverage -- see feedoracle.io/data/feedoracle-metrics.json for current combined totals. Every response is ES256K + ML-DSA-65 signed and anchored to independent randomness beacons. Free tier via self-registration (kya_register), no API key needed to start.",
+  "description": "Compliance evidence infrastructure for regulated entities and their AI agents. MiCA stablecoin authorization, DORA operational resilience (26 tracked control areas), AMLR/sanctions screening, and reserve/risk scoring across 6 FeedOracle-branded oracles. Also draws on a larger shared compliance-infrastructure mesh (OracleNet) for extended coverage -- see feedoracle.io/data/feedoracle-metrics.json for current combined totals. Supported evidence responses carry signed receipt fields (ES256K; select responses additionally ML-DSA-65 and randomness-beacon anchors) — verify the fields returned by each individual response. Free tier via self-registration (kya_register), no API key needed to start.",
   "version": "5.0.0",
   "author": "FeedOracle Technologies",
   "homepage": "https://feedoracle.io",
