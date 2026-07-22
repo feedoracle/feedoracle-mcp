@@ -52,7 +52,7 @@ curl -s -X POST https://feedoracle.io/mcp/ \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"kya_register","arguments":{"agent_name":"my-agent","agent_purpose":"compliance checks","owner_email":"you@example.com","owner_org":"Your Org"}}}'
 ```
 
-This returns an API key and a starting balance of free units.
+This returns an API key and a starting balance of free units. **Note: this call creates a real registration and issues a secret API key. Store it securely and do not commit it.**
 
 ## MCP quickstart
 
@@ -139,7 +139,7 @@ Supported evidence responses include signed receipt fields — source, timestamp
 curl -s https://feedoracle.io/.well-known/jwks.json   # public keys to verify signatures
 ```
 
-Live-verified 2026-07-22: responses carry dual signatures (ES256K + ML-DSA-65 / FIPS 204) plus anchors to independent public randomness beacons (NIST Randomness Beacon, CURBy-RNG) so a result's timing can't be selectively chosen after the fact. Earlier versions of this document described an on-chain escrow-based settlement mechanism on Base; that mechanism is now retired and not accepting new activity — it has not been re-verified as accurate for the period it originally described, so no historical settlement figures are repeated here. For current anchor and verification status, see [Trust](https://feedoracle.io/trust/).
+Live verification on 2026-07-22 confirmed ES256K and ML-DSA-65 signatures plus NIST and CURBy randomness-beacon anchors on the tested response. Coverage can vary by tool and response type; verify the fields returned with each individual result. Earlier versions of this document described an on-chain escrow-based settlement mechanism on Base; that mechanism is now retired and not accepting new activity — it has not been re-verified as accurate for the period it originally described, so no historical settlement figures are repeated here. For current anchor and verification status, see [Trust](https://feedoracle.io/trust/).
 
 Full docs: [`docs/TRUST_POLICY.md`](docs/TRUST_POLICY.md) · [`docs/AUDIT_TRAIL.md`](docs/AUDIT_TRAIL.md) · [`docs/KYA.md`](docs/KYA.md) · [`docs/BILLING.md`](docs/BILLING.md) · [`docs/WORKFLOWS.md`](docs/WORKFLOWS.md)
 
