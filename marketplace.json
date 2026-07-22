@@ -1,17 +1,39 @@
 {
   "schema_version": "1.0",
   "name": "FeedOracle DORA OS",
-  "description": "DORA Operating System for regulated financial entities. 11 MCP servers, 203 tools covering all 26 DORA articles, MiCA stablecoin compliance, AML screening, macro intelligence, contract analysis, and incident reporting. Closed-loop finding management with automated escalation. Every response ES256K-signed and blockchain-anchored. Free tier, no API key needed.",
+  "description": "Compliance evidence infrastructure for regulated entities and their AI agents. MiCA stablecoin authorization, DORA operational resilience (all articles), AMLR/sanctions screening, and reserve/risk scoring across 6 FeedOracle-branded oracles. Also draws on a larger shared compliance-infrastructure mesh (OracleNet) for extended coverage -- see feedoracle.io/data/feedoracle-metrics.json for current combined totals. Every response is ES256K + ML-DSA-65 signed and anchored to independent randomness beacons. Free tier via self-registration (kya_register), no API key needed to start.",
   "version": "5.0.0",
   "author": "FeedOracle Technologies",
   "homepage": "https://feedoracle.io",
   "icon": "https://feedoracle.io/favicon.png",
   "transport": "streamable-http",
   "url": "https://feedoracle.io/mcp/",
-  "categories": ["compliance", "finance", "regulatory", "blockchain", "audit", "dora", "mica"],
-  "tags": ["DORA", "DORA-OS", "MiCA", "BaFin", "stablecoin", "compliance", "AML", "AMLR", "KYA", "audit-trail", "ES256K", "evidence", "RegTech"],
+  "categories": [
+    "compliance",
+    "finance",
+    "regulatory",
+    "blockchain",
+    "audit",
+    "dora",
+    "mica"
+  ],
+  "tags": [
+    "DORA",
+    "DORA-OS",
+    "MiCA",
+    "BaFin",
+    "stablecoin",
+    "compliance",
+    "AML",
+    "AMLR",
+    "KYA",
+    "audit-trail",
+    "ES256K",
+    "evidence",
+    "RegTech"
+  ],
   "requires_auth": false,
   "free_tier": true,
-  "tool_count": 203,
-  "server_count": 11
+  "tool_count": 149,
+  "server_count": 6
 }
