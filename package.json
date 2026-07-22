@@ -1,7 +1,7 @@
 {
   "name": "feedoracle-mcp",
   "version": "6.0.0",
-  "description": "FeedOracle Compliance Evidence Infrastructure \u2014 90 MCP oracles, 1,014 tools, execute pipeline, neural routing, on-chain settlement",
+  "description": "FeedOracle Compliance Evidence Infrastructure \u2014 MCP server for MiCA, DORA, and AMLR compliance evidence, signed and verifiable",
   "type": "module",
   "main": "server.mjs",
   "scripts": {
